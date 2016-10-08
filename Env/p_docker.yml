@@ -1,0 +1,18 @@
+pre:
+  vagrant_root:
+    root_password: password
+
+post:
+  docker:
+    listen:
+      - protocol: tcp
+        address: 0.0.0.0
+        port: 2375
+      - protocol: tcp
+        address: 127.0.0.1
+        port: 2376
+      - protocol: unix
+        address: /var/run/docker.sock
+    tls:
+      enable: no 
+      cert_dir: /etc/docker
