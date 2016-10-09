@@ -33,7 +33,7 @@ Bin/suit itamae exec
 echo "*********************************************"
 echo "step05: test by serverspec..."
 echo "*********************************************"
-Bin/suit serversepc exec
+Bin/suit serverspec exec
 RC_SS=$?
 
 # Infrataster
