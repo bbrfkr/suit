@@ -11,7 +11,7 @@ def itamae_exec(mode, verbose)
   if mode == "exec" || mode == "test"
     connections = YAML.load_file('Env/inventory.yml')
     if File.exists?('Env/properties.yml')
-      if File.empty?('Env/properties.yml')
+      if File.zero?('Env/properties.yml')
         properties = YAML.load_file('Env/properties.yml')
       end
     end
