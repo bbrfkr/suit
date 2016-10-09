@@ -7,7 +7,7 @@ set :backend, :ssh
 connection = ENV['CONN_NAME']
 host = ENV['CONN_HOST']
 if File.exists?('Env/properties.yml')
-  if File.zero?('Env/properties.yml')
+  if not File.zero?('Env/properties.yml')
     properties = YAML.load_file('Env/properties.yml')
     if properties[connection] != nil
       set_property properties[connection]
