@@ -140,8 +140,7 @@ entry02:
     role03_parameter02: test05
     role03_parameter03: test06
 ```
-The top level key should have the same value of `conn_name` in `inventory.yml`. The second level key should have a role name. The more level keys and values are the parameters and values used in each role.   
-We can get the default parameters of each role by executing the following command;
+The top level key should have the same value of `conn_name` in `inventory.yml`. The second level key should have a role name. The more level keys and values are the parameters and values used in each role. To create `properties.yml` easily, you can get the default parameters of each role by executing the following command;
 ```
 $ Bin/suit role params [role_name]
 ```
