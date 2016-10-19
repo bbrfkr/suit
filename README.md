@@ -88,7 +88,7 @@ If you want to see the detail of the roles(abstract, procedures and parameters),
 https://github.com/bbrfkr/suit/tree/master/Roles/[the_name_of_role]
 
 ### create inventory.yml
-`inventory.yml` is a file with information for suit to connect target server. Before using suit, you have to set inventory.yml in `Env/` directory.
+`inventory.yml` is a yaml file with information for suit to connect target server. Before using suit, you have to set inventory.yml in `Env/` directory.
 
 this file is written as follow;
 
@@ -125,8 +125,41 @@ The password with the user specified in `conn_user`
 The port number which is used when connect to target server.
 
 ### create properties.yml
-`properties.yml` is a file with parameters which are used in itamae, serverspec and infrataster. This file is written as follow;
+`properties.yml` is a yaml file with parameters which are used in itamae, serverspec and infrataster. This file is written as follow;
+```
+entry01:
+  role01:
+    role01_parameter01: test01
+    role01_parameter02: test02    
+
+entry02:
+  role02:
+    role02_parameter01: test03
+  role03:
+    role03_parameter01: test04
+    role03_parameter02: test05
+    role03_parameter03: test06
+```
+The top level key should have the same value of `conn_name` in `inventory.yml`. The second level key should have a role name. The more level keys and values are the parameters and values used in each role.   
+We can get the default parameters of each role by executing the following command;
+```
+$ Bin/suit role params [role_name]
 ```
 
+### execute itamae
+After setting `inventory.yml` and `properties.yml`, execute the only following command for executing itamae;
+```
+$ Bin/suit itamae exec
 ```
 
+### execute serverspec
+For executing serverspec, execute the only following command;
+```
+$ Bin/suit serverspec exec
+```
+
+### execute infrataster
+For executing infrataster, execute the only following command;
+```
+$ Bin/suit infrataster exec
+```
