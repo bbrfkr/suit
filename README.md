@@ -51,3 +51,26 @@ $ git clone https://github.com/bbrfkr/suit
     * Bin/suit infrataster exec
         execute infrataset
     ```
+
+## usage
+
+### create inventory
+Inventory is a file with information for suit to connect target server. this file is written as follow;
+
+```
+- conn_name: entry01
+  conn_host: 192.168.0.1
+  roles:
+    - role01
+  conn_user: root
+  conn_pass: password
+  conn_port: 22
+ 
+- conn_name: entry02
+  conn_host: 192.168.0.2
+  roles:
+    - role02
+  conn_user: root
+  conn_pass: password
+  conn_port: 22
+```
