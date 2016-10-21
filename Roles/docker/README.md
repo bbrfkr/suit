@@ -8,12 +8,15 @@ Install and setup docker.
 2. set listen port and tls setting
 3. enable and start service
 
-## tests
+## tests (serverspec)
 1. check package is installed
 2. check service is enabled and running
 3. check specified ports are listened
 4. check tls is enabled or disabled
 5. check the location of certificate directory
+
+## tests (infrataster)
+nothing
 
 ## parameters
 ```
