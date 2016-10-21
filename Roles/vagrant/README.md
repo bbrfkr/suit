@@ -6,8 +6,11 @@ Install vagrant.
 ## procedures
 1. install vagrant
 
-## tests
+## tests (serverspec)
 1. check package is installed
+
+## tests (infrataster)
+nothing
 
 ## parameters
 ```
