@@ -6,7 +6,10 @@ Against virtual machine created by vagrant, this role change the password of roo
 ## procedures
 1. change root password
 
-## tests
+## tests (serverspec)
+nothing
+
+## tests (infrataster)
 nothing
 
 ## parameters
