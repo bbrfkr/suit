@@ -1,21 +1,20 @@
 # Role Name: openstack_ntp
 
 ## abstract
-This role executes basic network setting for openstack environment.
+This role executes ntp settings for openstack environment.
 
 ## procedures
-1. disable NetworkManager
-2. disable firewalld
-3. set hostname (hook reboot)
-4. edit hosts
-5. edit resolv.conf
-6. disable PEERDNS
+1. install chrony
+2. add entry ntp server to sync time
+3. add entry of network to allow to sync time (when target is controller node)
+4. enable and start chronyd
 
 ## tests (serverspec)
-1. check hostname
-2. check hosts entries are available
-3. check dns servers are set
-4. check be able to access internet
+1. check chrony is installed
+2. check chronyd service is running and enabled
+3. check ntp servers are specified
+4. check specified network is allowd to sync time
+5. check target server's time is syncronized actually 
 
 ## tests (infrataster)
 nothing
@@ -23,17 +22,15 @@ nothing
 ## parameters
 ```
 ---
-openstack_network:
-  hostname: localhost.localdomain                                                   # hostname
-  hosts_entries:
-    - server: 'localhost localhost.localdomain localhost4 localhost4.localdomain4'  # name of server
-      ip: '127.0.0.1'                                                               # address of server
-    - server: 'localhost6 localhost6.localdomain6'                                  # name of server
-      ip: '::1'                                                                     # address of server
-  dns_servers:
-    - server: 8.8.8.8                                                               # address of dns server
-    - server: 8.8.4.4                                                               # address of dns server
-
+openstack_ntp:
+  ntp_servers:
+    - server: 0.jp.pool.ntp.org
+    - server: 1.jp.pool.ntp.org
+    - server: 2.jp.pool.ntp.org
+    - server: 3.jp.pool.ntp.org
+  controller: localhost.localdomain
+  allow_sync:
+    - network: 192.168.0.0/24
 ```
 
 ## supported os
