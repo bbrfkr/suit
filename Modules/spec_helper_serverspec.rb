@@ -10,9 +10,9 @@ if File.exists?('Env/properties.yml')
   if not File.zero?('Env/properties.yml')
     properties = YAML.load_file('Env/properties.yml')
     if properties[connection] != nil
-      set_property properties[connection]
+      set_property(properties[connection])
     else
-      set_property {}
+      set_property({})
     end
   end
 end
