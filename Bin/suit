@@ -3,6 +3,9 @@
 # constant
 VERSION="0.1"
 
+# variable
+$rc = 0
+
 # function
 def show_help() 
   puts ("suit: Simply Usable Infrastructure Template ")
@@ -39,18 +42,22 @@ end
 
 def exec_itamae(mode, option)
   system "Bin/itamae_exec.sh #{ mode.to_s } #{ option.to_s }"
+  $rc = $?.to_i
 end
 
 def exec_serverspec(mode, option)
   system "Bin/serverspec_exec.sh #{ mode.to_s } #{ option.to_s }"
+  $rc = $?.to_i
 end
 
 def exec_infrataster(mode, option)
   system "Bin/infrataster_exec.sh #{ mode.to_s } #{ option.to_s }"
+  $rc = $?.to_i
 end
 
 def show_role_list()
   system "ls -1 Roles"
+  $rc = $?.to_i
 end
 
 def show_role_params(role)
@@ -109,3 +116,9 @@ end
 
 # main
 parse(ARGV)
+if $rc == 0
+  exit 0
+else
+  exit 1
+end
+

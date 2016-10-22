@@ -29,6 +29,9 @@ echo "*********************************************"
 cd ../..
 Bin/suit itamae exec
 
+echo "wait server status is fixed..."
+sleep 30s
+
 # Serverspec
 echo "*********************************************"
 echo "step05: test by serverspec..."
