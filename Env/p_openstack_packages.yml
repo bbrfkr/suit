@@ -1,0 +1,5 @@
+pre:
+  vagrant_root:
+    root_password: password
+
+post:
