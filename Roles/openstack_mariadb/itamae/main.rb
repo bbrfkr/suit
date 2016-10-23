@@ -24,8 +24,6 @@ service "mariadb" do
 end
 
 # mysql secure installation
-      run_command("mysql -uroot -e \"show databases;\"", error: false).exit_status
-
 directory tmp_dir do
   action :create
   only_if "mysql -uroot -e \"show databases;\""
