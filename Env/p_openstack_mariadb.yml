@@ -1,0 +1,11 @@
+pre:
+  vagrant_root:
+    root_password: password
+
+post:
+  openstack_packages:
+  openstack_mariadb:
+    bind_address: 127.0.0.1
+    tmp_dir: /tmp/openstack_mariadb
+    mariadb_pass: password
+
