@@ -16,6 +16,7 @@ end
 template "/etc/my.cnf.d/openstack.cnf" do
   action :create
   variables(bind_address: node['openstack_mariadb']['bind_address'])
+  notifies :restart, "service[mariadb]"
 end
 
 # enable mariadb
@@ -24,8 +25,6 @@ service "mariadb" do
 end
 
 # mysql secure installation
-      run_command("mysql -uroot -e \"show databases;\"", error: false).exit_status
-
 directory tmp_dir do
   action :create
   only_if "mysql -uroot -e \"show databases;\""
