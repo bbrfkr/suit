@@ -23,13 +23,13 @@ nothing
 ```
 ---
 openstack_ntp:
-  ntp_servers:
+  ntp_servers:                       # entries of ntp servers wanted to sync time
     - server: 0.jp.pool.ntp.org
     - server: 1.jp.pool.ntp.org
     - server: 2.jp.pool.ntp.org
     - server: 3.jp.pool.ntp.org
-  controller: localhost.localdomain
-  allow_sync:
+  controller: localhost.localdomain  # controller node hostname or ip
+  allow_sync:                        # networks allowed to sync time
     - network: 192.168.0.0/24
 ```
 
