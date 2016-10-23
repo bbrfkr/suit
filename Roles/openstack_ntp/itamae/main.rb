@@ -23,7 +23,7 @@ file "/etc/chrony.conf" do
       end
     end
 
-    if not (content =~ /#{ entry_ntp_servers }/)
+    if not (content =~ /^#{ entry_ntp_servers }/)
       content.gsub!(/^server.*\n/, "")
       content.gsub!(marker, marker + entry_ntp_servers)
     end
@@ -44,7 +44,7 @@ if hostname == controller
         entry_allow_networks += "allow " + network['network'] + "\n"
       end
 
-      if not (content =~ /#{ entry_allow_networks }/)
+      if not (content =~ /^#{ entry_allow_networks }/)
         content.gsub!(/^allow.*\n/, "")
         content.gsub!(marker, marker + entry_allow_networks)
       end
