@@ -6,6 +6,7 @@ mariadb_pass = node['openstack_keystone_install']['mariadb_pass']
 keystone_dbpass = node['openstack_keystone_install']['keystone_dbpass']
 admin_token = node['openstack_keystone_install']['admin_token']
 controller = node['openstack_keystone_install']['controller']
+keyfiles = node['openstack_keystone_install']['keyfiles']
 
 # create database
 execute <<-"EOS" do
@@ -72,5 +73,38 @@ provider = fernet
     EOS
     blockinfile(section, settings, "MANAGED BY ITAMAE (openstack_keystone_install, token)", content)
   end
+end
+
+# create keyfiles dir
+directory "#{ keyfiles }/openstack_keystone_install" do
+  action :create
+end
+
+# deploy keystone service database
+execute "su -s /bin/sh -c \"keystone-manage db_sync\" keystone && touch #{ keyfiles }/openstack_keystone_install/db_sync" do
+  not_if "ls #{ keyfiles }/openstack_keystone_install/db_sync"
+end
+
+# initialize fetnet key
+execute "keystone-manage fernet_setup --keystone-user keystone --keystone-group keystone && touch #{ keyfiles }/openstack_keystone_install/fernet_setup" do
+  not_if "ls #{ keyfiles }/openstack_keystone_install/fernet_setup"
+end
+
+# setting apache
+file "/etc/httpd/conf/httpd.conf" do
+  action :edit
+  block do |content|
+    content.gsub!(/^#ServerName .*/, "ServerName #{ controller }")
+    content.gsub!(/^ServerName .*/, "ServerName #{ controller }")
+  end
+end
+
+remote_file "/etc/httpd/conf.d/wsgi-keystone.conf" do
+  action :create
+end
+
+# enable and start apache
+service "httpd" do
+  action [:enable, :start]
 end
 

@@ -11,6 +11,7 @@
   roles:
     - openstack_packages
     - openstack_mariadb
+    - suit_keyfiles 
     - openstack_keystone_install
   conn_user: root
   conn_pass: password
