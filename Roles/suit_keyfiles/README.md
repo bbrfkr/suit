@@ -16,7 +16,7 @@ nothing
 ```
 ---
 suit_keyfiles:
-  keyfiles_dir: /var/suit_keyfiles
+  keyfiles_dir: /var/suit_keyfiles  # directory of keyfile's
 ```
 
 ## supported os

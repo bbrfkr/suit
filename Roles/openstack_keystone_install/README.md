@@ -30,10 +30,10 @@ nothing
 ```
 ---
 openstack_keystone_install:
-  mariadb_pass: password
-  keystone_dbpass: password
-  admin_token: password
-  controller: localhost
+  mariadb_pass: password     # password for root user of mariadb
+  keystone_dbpass: password  # keystone database password
+  admin_token: password      # temporary admin token
+  controller: localhost      # hostname or ip of controller node
 ```
 
 ## supported os

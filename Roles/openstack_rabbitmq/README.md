@@ -22,7 +22,7 @@ nothing
 ```
 ---
 openstack_rabbitmq:
-  rabbitmq_pass: password
+  rabbitmq_pass: password  # password for openstack user of rabbitmq
 ```
 
 ## supported os
