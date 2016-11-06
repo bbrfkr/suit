@@ -6,7 +6,7 @@ mariadb_pass = node['openstack_keystone_install']['mariadb_pass']
 keystone_dbpass = node['openstack_keystone_install']['keystone_dbpass']
 admin_token = node['openstack_keystone_install']['admin_token']
 controller = node['openstack_keystone_install']['controller']
-keyfiles = node['openstack_keystone_install']['keyfiles']
+keyfiles_dir = node['openstack_keystone_install']['keyfiles_dir']
 
 # create database
 execute <<-"EOS" do
@@ -76,18 +76,18 @@ provider = fernet
 end
 
 # create keyfiles dir
-directory "#{ keyfiles }/openstack_keystone_install" do
+directory "#{ keyfiles_dir }/openstack_keystone_install" do
   action :create
 end
 
 # deploy keystone service database
-execute "su -s /bin/sh -c \"keystone-manage db_sync\" keystone && touch #{ keyfiles }/openstack_keystone_install/db_sync" do
-  not_if "ls #{ keyfiles }/openstack_keystone_install/db_sync"
+execute "su -s /bin/sh -c \"keystone-manage db_sync\" keystone && touch #{ keyfiles_dir }/openstack_keystone_install/db_sync" do
+  not_if "ls #{ keyfiles_dir }/openstack_keystone_install/db_sync"
 end
 
 # initialize fetnet key
-execute "keystone-manage fernet_setup --keystone-user keystone --keystone-group keystone && touch #{ keyfiles }/openstack_keystone_install/fernet_setup" do
-  not_if "ls #{ keyfiles }/openstack_keystone_install/fernet_setup"
+execute "keystone-manage fernet_setup --keystone-user keystone --keystone-group keystone && touch #{ keyfiles_dir }/openstack_keystone_install/fernet_setup" do
+  not_if "ls #{ keyfiles_dir }/openstack_keystone_install/fernet_setup"
 end
 
 # setting apache
