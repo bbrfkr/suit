@@ -19,6 +19,7 @@ post:
     keystone_dbpass: *all_password
     admin_token: *all_password
     controller: *controller
+    keyfiles_dir: /var/suit_keyfiles
   openstack_keystone_setup:
     admin_token: *all_password
     controller: *controller
