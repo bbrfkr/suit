@@ -3,7 +3,7 @@ require './Modules/defaults'
 property.reverse_merge!(defaults_load(__FILE__))
 
 mariadb_pass = property['openstack_keystone_install']['mariadb_pass']
-keyfiles = property['openstack_keystone_install']['keyfiles']
+keyfiles_dir = property['openstack_keystone_install']['keyfiles_dir']
 
 describe ("openstack_keystone_install") do
   describe ("check database is created") do
@@ -31,13 +31,13 @@ describe ("openstack_keystone_install") do
   end
 
   describe ("check keystone service database is deployed") do
-    describe file("#{ keyfiles }/openstack_keystone_install/db_sync") do
+    describe file("#{ keyfiles_dir }/openstack_keystone_install/db_sync") do
       it { should exist }
     end
   end
 
   describe ("check fernet key is initialized") do
-    describe file("#{ keyfiles }/openstack_keystone_install/fernet_setup") do
+    describe file("#{ keyfiles_dir }/openstack_keystone_install/fernet_setup") do
       it { should exist }
     end
   end
