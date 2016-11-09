@@ -1,0 +1,23 @@
+- conn_name: pre
+  conn_host: localhost
+  roles:
+    - vagrant_root
+  conn_user: vagrant
+  conn_pass: vagrant
+  conn_port: 2222
+
+- conn_name: post
+  conn_host: localhost
+  roles:
+    - openstack_packages
+    - openstack_mariadb
+    - openstack_rabbitmq
+    - suit_keyfiles 
+    - openstack_keystone_install
+    - openstack_keystone_setup
+    - openstack_glance
+    - openstack_nova_controller
+  conn_user: root
+  conn_pass: password
+  conn_port: 2222
+

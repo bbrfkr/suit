@@ -1,0 +1,55 @@
+all_password: &all_password password
+controller: &controller localhost
+region: &region RegionOne
+domain: &domain default
+scripts_dir: &scripts_dir /root/openrc_files
+keyfiles_dir: &keyfiles_dir /var/suit_keyfiles
+
+pre:
+  vagrant_root:
+    root_password: *all_password
+
+post:
+  openstack_packages:
+  openstack_mariadb:
+    bind_address: 127.0.0.1
+    tmp_dir: /tmp/openstack_mariadb
+    mariadb_pass: *all_password
+  openstack_rabbitmq:
+    rabbitmq_pass: *all_password
+  openstack_keystone_install:
+    mariadb_pass: *all_password
+    keystone_dbpass: *all_password
+    admin_token: *all_password
+    controller: *controller
+    keyfiles_dir: *keyfiles_dir
+  openstack_keystone_setup:
+    admin_token: *all_password
+    controller: *controller
+    region: *region
+    domain: *domain
+    admin_pass: *all_password
+    demo_pass: *all_password
+    scripts_dir: *scripts_dir
+  openstack_glance:
+    mariadb_pass: *all_password
+    keyfiles_dir: *keyfiles_dir
+    glance_dbpass: *all_password
+    scripts_dir: *scripts_dir
+    domain: *domain
+    glance_pass: *all_password
+    controller: *controller
+    region: *region
+    store_images_dir: /var/openstack/glance/images/
+  openstack_nova_controller:
+    mariadb_pass: *all_password
+    novadb_pass: *all_password
+    scripts_dir: *scripts_dir
+    nova_pass: *all_password
+    domain: *domain
+    region: *region
+    controller: *controller
+    mgmt_ip: 127.0.0.1
+    rabbitmq_pass: *all_password
+    keyfiles_dir: *keyfiles_dir
+
