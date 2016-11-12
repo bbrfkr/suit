@@ -57,10 +57,9 @@ if reboot_flag
   execute "shutdown -r"
   local_ruby_block "caution reboot" do
     block do
-      puts "\e[31m***** server will be rebooted. please wait for #{ wait_for_reboot.to_s } minutes... *****\e[0m"
+      puts "\e[31m***** server will be rebooted. please wait for #{ wait_for_reboot } minutes... *****\e[0m"
+      sleep(wait_for_reboot * 60)
     end
   end
 end
-
-sleep(wait_for_reboot * 60)
 
