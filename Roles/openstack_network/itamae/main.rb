@@ -2,6 +2,7 @@ require './Modules/defaults'
 node.reverse_merge!(defaults_load(__FILE__))
 
 reboot_flag = false
+wait_for_reboot = 3
 
 # disable NetworkManager
 service "NetworkManager" do
@@ -56,8 +57,10 @@ if reboot_flag
   execute "shutdown -r"
   local_ruby_block "caution reboot" do
     block do
-      puts "\e[31m***** server will be rebooted. please wait for several minutes... *****\e[0m"
+      puts "\e[31m***** server will be rebooted. please wait for #{ wait_for_reboot.to_s } minutes... *****\e[0m"
     end
   end
 end
+
+sleep(wait_for_reboot * 60)
 
