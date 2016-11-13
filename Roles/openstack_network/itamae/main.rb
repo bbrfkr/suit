@@ -46,11 +46,15 @@ nics = run_command("ip addr | grep -e 'state' | awk '{ print $2 }'").stdout.spli
 nics.each do |nic|
   file "/etc/sysconfig/network-scripts/ifcfg-#{ nic }" do
     action :edit
+    notifies :restart, "service[network]"
     block do |content|
       content.gsub!(/^PEERDNS=yes/, "PEERDNS=no")
     end
   end
 end
+
+# for restarting network
+service "network"
 
 # reboot server when hostname is changed
 if reboot_flag
