@@ -100,6 +100,11 @@ end
 # modify config file
 file "/etc/nova/nova.conf" do
   action :edit
+  notifies :restart, "service[openstack-nova-api]"
+  notifies :restart, "service[openstack-nova-consoleauth]"
+  notifies :restart, "service[openstack-nova-scheduler]"
+  notifies :restart, "service[openstack-nova-conductor]"
+  notifies :restart, "service[openstack-nova-novncproxy]"
   block do |content|
     section = "[DEFAULT]"
     settings = <<-"EOS"
@@ -184,7 +189,7 @@ end
 # enable and start services of nova
 services = ["openstack-nova-api", "openstack-nova-consoleauth", \
             "openstack-nova-scheduler", "openstack-nova-conductor", \
-            "openstack-nova-novncproxy.service"]
+            "openstack-nova-novncproxy"]
 services.each do |srv|
   service srv do
     action [:enable, :start]
