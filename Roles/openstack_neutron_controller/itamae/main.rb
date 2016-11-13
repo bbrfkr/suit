@@ -44,7 +44,7 @@ end
 execute "#{ script } openstack user create --domain #{ domain } --password #{ neutron_pass } neutron" do
   not_if "#{ script } openstack user list | grep neutron"
 end
-
+neutron-server
 # grant admin role to nova user
 execute "#{ script } openstack role add --project service --user neutron admin" do
   not_if "#{ script } openstack role list --project service --user neutron | awk '{ print $4 }' | grep admin"
@@ -80,6 +80,12 @@ end
 # modify config file
 file "/etc/neutron/neutron.conf" do
   action :edit
+  notifies :restart, "service[neutron-server]"
+  notifies :restart, "service[neutron-linuxbridge-agent]"
+  notifies :restart, "service[neutron-dhcp-agent]"
+  notifies :restart, "service[neutron-metadata-agent]"
+  notifies :restart, "service[neutron-l3-agent]"
+n-server
   block do |content|
     section = "[database]"
     settings = <<-"EOS"
@@ -145,6 +151,11 @@ end
 
 file "/etc/neutron/plugins/ml2/ml2_conf.ini" do
   action :edit
+  notifies :restart, "service[neutron-server]"
+  notifies :restart, "service[neutron-linuxbridge-agent]"
+  notifies :restart, "service[neutron-dhcp-agent]"
+  notifies :restart, "service[neutron-metadata-agent]"
+  notifies :restart, "service[neutron-l3-agent]"
   block do |content|
     section = "[ml2]"
     settings = <<-"EOS"
@@ -177,6 +188,11 @@ end
 
 file "/etc/neutron/plugins/ml2/linuxbridge_agent.ini" do
   action :edit
+  notifies :restart, "service[neutron-server]"
+  notifies :restart, "service[neutron-linuxbridge-agent]"
+  notifies :restart, "service[neutron-dhcp-agent]"
+  notifies :restart, "service[neutron-metadata-agent]"
+  notifies :restart, "service[neutron-l3-agent]"
   block do |content|
     section = "[linux_bridge]"
     settings = <<-"EOS"
@@ -203,6 +219,11 @@ end
 
 file "/etc/neutron/l3_agent.ini" do
   action :edit
+  notifies :restart, "service[neutron-server]"
+  notifies :restart, "service[neutron-linuxbridge-agent]"
+  notifies :restart, "service[neutron-dhcp-agent]"
+  notifies :restart, "service[neutron-metadata-agent]"
+  notifies :restart, "service[neutron-l3-agent]"
   block do |content|
     section = "[DEFAULT]"
     settings = <<-"EOS"
@@ -215,6 +236,11 @@ end
 
 file "/etc/neutron/dhcp_agent.ini" do
   action :edit
+  notifies :restart, "service[neutron-server]"
+  notifies :restart, "service[neutron-linuxbridge-agent]"
+  notifies :restart, "service[neutron-dhcp-agent]"
+  notifies :restart, "service[neutron-metadata-agent]"
+  notifies :restart, "service[neutron-l3-agent]"
   block do |content|
     section = "[DEFAULT]"
     settings = <<-"EOS"
@@ -228,6 +254,11 @@ end
 
 file "/etc/neutron/metadata_agent.ini" do
   action :edit
+  notifies :restart, "service[neutron-server]"
+  notifies :restart, "service[neutron-linuxbridge-agent]"
+  notifies :restart, "service[neutron-dhcp-agent]"
+  notifies :restart, "service[neutron-metadata-agent]"
+  notifies :restart, "service[neutron-l3-agent]"
   block do |content|
     section = "[DEFAULT]"
     settings = <<-"EOS"
