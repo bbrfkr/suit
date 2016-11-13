@@ -44,7 +44,7 @@ end
 execute "#{ script } openstack user create --domain #{ domain } --password #{ neutron_pass } neutron" do
   not_if "#{ script } openstack user list | grep neutron"
 end
-neutron-server
+
 # grant admin role to nova user
 execute "#{ script } openstack role add --project service --user neutron admin" do
   not_if "#{ script } openstack role list --project service --user neutron | awk '{ print $4 }' | grep admin"
@@ -104,7 +104,6 @@ notify_nova_on_port_status_changes = True
 notify_nova_on_port_data_changes = True
     EOS
     blockinfile(section, settings, "MANAGED BY ITAMAE (openstack_neutron_controller, DEFAULT)", content)
-
 
     section = "[oslo_messaging_rabbit]"
     settings = <<-"EOS"
