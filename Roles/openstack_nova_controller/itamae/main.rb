@@ -22,7 +22,7 @@ end
 
 # create nova database
 execute "mysql -u root -p#{ mariadb_pass } -e \"CREATE DATABASE nova;\"" do
-  not_if "mysql -u root -p#{ mariadb_pass } -e \"show databases;\" | grep \" nova \""
+  not_if "mysql -u root -p#{ mariadb_pass } -e \"show databases;\" | grep \"^nova$\""
 end
 
 # grant permissions to nova_api database
