@@ -15,6 +15,7 @@ end
 # set config file
 template "/etc/my.cnf.d/openstack.cnf" do
   action :create
+  notifies :restart "service[mariadb]"
   variables(bind_address: node['openstack_mariadb']['bind_address'])
   notifies :restart, "service[mariadb]"
 end
