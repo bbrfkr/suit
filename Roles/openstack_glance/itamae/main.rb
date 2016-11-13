@@ -79,6 +79,8 @@ end
 # edit config file
 file "/etc/glance/glance-api.conf" do
   action :edit
+  notifies :restart, "service[openstack-glance-api]"
+  notifies :restart, "service[openstack-glance-registry]"
   block do |content|
     section = "[database]" 
     settings = <<-"EOS"
@@ -118,6 +120,8 @@ end
 
 file "/etc/glance/glance-registry.conf" do
   action :edit
+  notifies :restart, "service[openstack-glance-api]"
+  notifies :restart, "service[openstack-glance-registry]"
   block do |content|
     section = "[database]" 
     settings = <<-"EOS"
