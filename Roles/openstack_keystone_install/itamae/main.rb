@@ -55,6 +55,7 @@ end
 
 file "/etc/keystone/keystone.conf" do
   action :edit
+  notifies :restart, "service[httpd]"
   block do |content|
     section = "[database]"
     settings = <<-"EOS"
@@ -66,6 +67,7 @@ end
 
 file "/etc/keystone/keystone.conf" do
   action :edit
+  notifies :restart, "service[httpd]"
   block do |content|
     section = "[token]"
     settings = <<-"EOS"
@@ -93,6 +95,7 @@ end
 # setting apache
 file "/etc/httpd/conf/httpd.conf" do
   action :edit
+  notifies :restart, "service[httpd]"
   block do |content|
     content.gsub!(/^#ServerName .*/, "ServerName #{ controller }")
     content.gsub!(/^ServerName .*/, "ServerName #{ controller }")
@@ -101,6 +104,7 @@ end
 
 remote_file "/etc/httpd/conf.d/wsgi-keystone.conf" do
   action :create
+  notifies :restart, "service[httpd]"
 end
 
 # enable and start apache
