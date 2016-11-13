@@ -240,7 +240,7 @@ end
 
 file "/etc/nova/nova.conf" do
   action :edit
-  notifies :restart, "service[openstack-nova-api]"
+  notifies :restart, "service[openstack-nova-api]", :immediately
   block do |content|
     section = "[neutron]"
     settings = <<-"EOS"
@@ -265,17 +265,17 @@ directory "#{ keyfiles_dir }/openstack_neutron_controller" do
   action :create
 end
 
-# create ml2_conf.ini symblic link
-execute "ln -s /etc/neutron/plugins/ml2/ml2_conf.ini /etc/neutron/plugin.ini" do
-  not_if "ls /etc/neutron/plugin.ini"
+# create plugin.ini symbolic link
+link "/etc/neutron/plugin.ini" do
+  to "/etc/neutron/plugins/ml2/ml2_conf.ini"
 end
 
-# deploy nova_api and nova databases
+# deploy neutron database
 execute "su -s /bin/sh -c \"neutron-db-manage --config-file /etc/neutron/neutron.conf --config-file /etc/neutron/plugins/ml2/ml2_conf.ini upgrade head\" neutron && touch #{ keyfiles_dir }/openstack_neutron_controller/neutron_db_manage" do
   not_if "ls #{ keyfiles_dir }/openstack_neutron_controller/neutron_db_manage"
 end
 
-# restart openstack-nova-api service
+# for restarting openstack-nova-api service
 service "openstack-nova-api"
 
 # enable and start services
