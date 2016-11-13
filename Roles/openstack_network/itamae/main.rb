@@ -2,7 +2,7 @@ require './Modules/defaults'
 node.reverse_merge!(defaults_load(__FILE__))
 
 reboot_flag = false
-wait_for_reboot = 4
+wait_for_reboot = 3
 
 # disable NetworkManager
 service "NetworkManager" do
