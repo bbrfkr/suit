@@ -9,4 +9,5 @@ openstack_network:
   dns_servers:
     - server: 8.8.8.8
     - server: 8.8.4.4
+  reboot_waittime: 3
 
