@@ -2,7 +2,7 @@ require './Modules/defaults'
 node.reverse_merge!(defaults_load(__FILE__))
 
 reboot_flag = false
-wait_for_reboot = 3
+reboot_waittime = node['openstack_network']['reboot_waittime']
 
 # disable NetworkManager
 service "NetworkManager" do
@@ -61,8 +61,8 @@ if reboot_flag
   execute "shutdown -r"
   local_ruby_block "caution reboot" do
     block do
-      puts "\e[31m***** server will be rebooted. please wait for #{ wait_for_reboot } minutes... *****\e[0m"
-      sleep(wait_for_reboot * 60)
+      puts "\e[31m***** server will be rebooted. please wait for #{ reboot_waittime } minutes... *****\e[0m"
+      sleep(reboot_waittime * 60)
     end
   end
 end
