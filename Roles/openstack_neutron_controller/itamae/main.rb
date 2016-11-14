@@ -85,7 +85,6 @@ file "/etc/neutron/neutron.conf" do
   notifies :restart, "service[neutron-dhcp-agent]"
   notifies :restart, "service[neutron-metadata-agent]"
   notifies :restart, "service[neutron-l3-agent]"
-n-server
   block do |content|
     section = "[database]"
     settings = <<-"EOS"
