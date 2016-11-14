@@ -16,6 +16,8 @@ hw_support = run_command("egrep -c '(vmx|svm)' /proc/cpuinfo", error: false).std
 
 file "/etc/nova/nova.conf" do
   action :edit
+  notifies :restart, "service[libvirtd]"
+  notifies :restart, "service[openstack-nova-compute]"
   block do |content|
     section = "[DEFAULT]"
     settings = <<-"EOS"
