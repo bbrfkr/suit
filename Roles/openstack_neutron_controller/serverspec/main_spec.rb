@@ -30,6 +30,12 @@ describe ("openstack_neutron_controller") do
     end
   end
 
+  describe ("check grant admin role to neutron user") do
+    describe command("#{ script } openstack role list --project service --user neutron | awk '{ print $4 }'") do
+      its(:stdout) { should match /admin/ }
+    end
+  end
+
   describe ("check neutron service entity is created") do
     describe command("#{ script } openstack service list") do
       its(:stdout) { should match /neutron/ }
