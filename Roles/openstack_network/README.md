@@ -33,6 +33,7 @@ openstack_network:
   dns_servers:
     - server: 8.8.8.8                                                               # address of dns server
     - server: 8.8.4.4                                                               # address of dns server
+  reboot_waittime: 3                                                                # time of waiting for server to be up 
 
 ```
 
