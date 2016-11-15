@@ -107,7 +107,7 @@ this file is written as follow;
     - role02
     - role03
   conn_user: root
-  conn_pass: password
+  conn_idkey: id_rsa_01
   conn_port: 22
 ```
 Each key means the following;
@@ -121,6 +121,8 @@ Roles wanted to apply to the target server.
 The user which is used when connect to target server.
 * conn_pass  
 The password with the user specified in `conn_user`
+* conn_idkey  
+The file name of secret key. please put the secret key to the directory `Env/`.
 * conn_port  
 The port number which is used when connect to target server.
 
