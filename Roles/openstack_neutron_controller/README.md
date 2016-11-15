@@ -22,13 +22,14 @@ This role executes install and setting neutron for controller node.
 1.  check neutron database are created
 2.  check privileges of database is set
 3.  check neutron user is created
-2016/11/15
-4.  check admin role is granted to nova user
-5.  check nova service entity is created
-6.  check endpoints for nova are created
+4.  check admin role is granted to neutron user
+5.  check neutron service entity is created
+6.  check endpoints for neutron are created
 7.  check packages are installed
-8.  check servcie databases is deployed
-9. check services are enabled and started
+8.  check plugin.ini symbolic link is created
+9.  check neutron servcie database is deployed
+10. check openstack-nova-api service is running
+11. check services are enabled and started
 
 ## tests (infrataster)
 nothing
@@ -36,17 +37,21 @@ nothing
 ## parameters
 ```
 ---
-openstack_nova_controller:
+openstack_neutron_controller:
   mariadb_pass: password            # root password of mariadb
-  novadb_pass: password             # password of nova databases
+  neutron_dbpass: password          # password of neutron database
   scripts_dir: /root/openrc_files   # location of openrc files
-  nova_pass: password               # password of nova user
   domain: default                   # domain name of openstack environment
+  neutron_pass: password            # password of neutron user
   region: RegionOne                 # region name of openstack environment
   controller: localhost             # hostname or ip of controller node
-  mgmt_ip: 127.0.0.1                # ip of management network for controller node
   rabbitmq_pass: password           # password of openstack user for rabbitmq
+  nova_pass: password               # password of nova user
+  provider_ifname: ens192           # name of interface for provider network
+  overlayif_ip: 127.0.0.1           # ip with interface for overlay
+  metadata_secret: password         # string for metadata secret
   keyfiles_dir: /var/suit_keyfiles  # location of keyfiles
+
 ```
 
 ## supported os
