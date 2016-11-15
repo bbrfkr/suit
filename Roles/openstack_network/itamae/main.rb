@@ -2,6 +2,7 @@ require './Modules/defaults'
 node.reverse_merge!(defaults_load(__FILE__))
 
 reboot_flag = false
+reboot_waittime = node['openstack_network']['reboot_waittime']
 
 # disable NetworkManager
 service "NetworkManager" do
@@ -45,18 +46,23 @@ nics = run_command("ip addr | grep -e 'state' | awk '{ print $2 }'").stdout.spli
 nics.each do |nic|
   file "/etc/sysconfig/network-scripts/ifcfg-#{ nic }" do
     action :edit
+    notifies :restart, "service[network]"
     block do |content|
       content.gsub!(/^PEERDNS=yes/, "PEERDNS=no")
     end
   end
 end
 
+# for restarting network
+service "network"
+
 # reboot server when hostname is changed
 if reboot_flag
   execute "shutdown -r"
   local_ruby_block "caution reboot" do
     block do
-      puts "\e[31m***** server will be rebooted. please wait for several minutes... *****\e[0m"
+      puts "\e[31m***** server will be rebooted. please wait for #{ reboot_waittime } minutes... *****\e[0m"
+      sleep(reboot_waittime * 60)
     end
   end
 end

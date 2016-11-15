@@ -21,6 +21,8 @@ echo "step03: launch target vms..."
 echo "*********************************************"
 cd .Vagrant/${VM01}
 vagrant up
+cd ../${VM02}
+vagrant up
 
 # Itamae
 echo "*********************************************"
@@ -29,8 +31,8 @@ echo "*********************************************"
 cd ../..
 Bin/suit itamae exec
 
-echo "wait for server being rebooted..."
-sleep 3m
+echo "wait server status is fixed..."
+sleep 30s
 
 # Serverspec
 echo "*********************************************"
@@ -51,6 +53,8 @@ echo "*********************************************"
 echo "step07: delete target vms..."
 echo "*********************************************"
 cd .Vagrant/${VM01}
+vagrant destroy -f
+cd ../${VM02}
 vagrant destroy -f
 
 # represent exit status
