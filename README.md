@@ -114,7 +114,7 @@ Each key means the following;
 * conn_name  
 The name of connection. We can name the connection an arbitrary name.
 * conn_host  
-The target server'S hostname or ip address.
+The target server's hostname or ip address.
 * roles  
 Roles wanted to apply to the target server.
 * conn_user  
