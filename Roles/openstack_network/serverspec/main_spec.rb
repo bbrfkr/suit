@@ -8,14 +8,14 @@ describe ("openstack_network") do
     services.each do |srv|
       describe service(srv) do
         it { should_not be_enabled }
-        it { should_not be_runnint }
+        it { should_not be_running }
       end
     end
   end
 
   describe ("check SELinux is disabled") do
     describe file("/etc/selinux/config") do
-      its(:contain) { should match /^SELINUX=disabled$/ }
+      its(:content) { should match /^SELINUX=disabled$/ }
     end
   end
 
