@@ -3,6 +3,22 @@ require './Modules/defaults'
 property.reverse_merge!(defaults_load(__FILE__))
 
 describe ("openstack_network") do
+  describe ("check NetworkManager and firewalld are disabled and stopped") do
+    services = ["NetworkManager", "firewalld"]
+    services.each do |srv|
+      describe service(srv) do
+        it { should_not be_enabled }
+        it { should_not be_runnint }
+      end
+    end
+  end
+
+  describe ("check SELinux is disabled") do
+    describe file("/etc/selinux/config") do
+      its(:contain) { should match /^SELINUX=disabled$/ }
+    end
+  end
+
   describe ("check hostname is set") do
     describe command("uname -n") do
       its(:stdout) { should eq property['openstack_network']['hostname'] + "\n" }

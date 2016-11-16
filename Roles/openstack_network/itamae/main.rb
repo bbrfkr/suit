@@ -14,6 +14,14 @@ service "firewalld" do
   action [:disable, :stop]
 end
 
+# disable SELINUX
+file "/etc/selinux/config" do
+  action :edit
+  block do |context|
+    content.gsub!(/^SELINUX=.*$/, "SELINUX=disabled")
+  end
+end
+
 # set hostname
 hostname = run_command("uname -n").stdout.chomp
 if hostname != node['openstack_network']['hostname']
