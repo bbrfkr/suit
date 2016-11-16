@@ -6,16 +6,19 @@ This role executes basic network setting for openstack environment.
 ## procedures
 1. disable NetworkManager
 2. disable firewalld
-3. set hostname (hook reboot)
-4. edit hosts
-5. edit resolv.conf
-6. disable PEERDNS
+3. disable SELinux
+4. set hostname (hook reboot)
+5. edit hosts
+6. edit resolv.conf
+7. disable PEERDNS
 
 ## tests (serverspec)
-1. check hostname
-2. check hosts entries are available
-3. check dns servers are set
-4. check be able to access internet
+1. check NetworkManger and firewalld are disabled and stopped
+2. check SELinux is disabled
+3. check hostname
+4. check hosts entries are available
+5. check dns servers are set
+6. check be able to access internet
 
 ## tests (infrataster)
 nothing
