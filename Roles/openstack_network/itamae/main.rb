@@ -15,11 +15,15 @@ service "firewalld" do
 end
 
 # disable SELINUX
-file "/etc/selinux/config" do
-  action :edit
-  block do |context|
-    content.gsub!(/^SELINUX=.*$/, "SELINUX=disabled")
+selinux = run_command("grep /etc/selinux/config -e \"^SELINUX=disabled$\"", error: false).exit_status
+if selinux != 0
+  file "/etc/selinux/config" do
+    action :edit
+    block do |content|
+      content.gsub!(/^SELINUX=.*$/, "SELINUX=disabled")
+    end
   end
+  reboot_flag = true
 end
 
 # set hostname
@@ -64,7 +68,7 @@ end
 # for restarting network
 service "network"
 
-# reboot server when hostname is changed
+# reboot server when hostname or selinux state is changed
 if reboot_flag
   execute "shutdown -r"
   local_ruby_block "caution reboot" do
