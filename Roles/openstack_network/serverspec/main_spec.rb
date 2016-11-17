@@ -14,8 +14,8 @@ describe ("openstack_network") do
   end
 
   describe ("check SELinux is disabled") do
-    describe file("/etc/selinux/config") do
-      its(:content) { should match /^SELINUX=disabled$/ }
+    describe command("getenforce") do
+      its(:stdout) { should eq "Disabled\n" }
     end
   end
 
