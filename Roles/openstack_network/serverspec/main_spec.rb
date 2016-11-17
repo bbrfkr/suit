@@ -15,7 +15,7 @@ describe ("openstack_network") do
 
   describe ("check SELinux is disabled") do
     describe command("getenforce") do
-      its(:stdout) { should eq "Disabled" }
+      its(:stdout) { should eq "Disabled\n" }
     end
   end
 
