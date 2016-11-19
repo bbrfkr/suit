@@ -1,0 +1,51 @@
+- conn_name: pre_controller
+  conn_host: localhost
+  roles:
+    - vagrant_root
+  conn_user: vagrant
+  conn_pass: vagrant
+  conn_port: 2222
+
+- conn_name: post_controller
+  conn_host: localhost
+  roles:
+    - openstack_network
+    - openstack_ntp
+    - openstack_packages
+    - openstack_mariadb
+    - openstack_mongodb
+    - openstack_rabbitmq
+    - openstack_memcached
+    - suit_keyfiles 
+    - openstack_keystone_install
+    - openstack_keystone_setup
+    - openstack_glance
+    - openstack_nova_controller
+    - openstack_neutron_controller
+    - openstack_cinder_controller
+  conn_user: root
+  conn_pass: password
+  conn_port: 2222
+
+- conn_name: pre_compute
+  conn_host: localhost
+  roles:
+    - vagrant_root
+  conn_user: vagrant
+  conn_pass: vagrant
+  conn_port: 2223
+ 
+- conn_name: post_compute
+  conn_host: localhost
+  roles:
+    - openstack_network
+    - openstack_ntp
+    - openstack_packages
+    - suit_keyfiles
+    - openstack_nova_compute
+    - openstack_neutron_compute
+    - openstack_cinder_storage
+  conn_user: root
+  conn_pass: password
+  conn_port: 2223
+
