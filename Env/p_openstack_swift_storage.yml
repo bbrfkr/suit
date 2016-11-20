@@ -1,0 +1,96 @@
+all_password: &all_password password
+controller: &controller controller
+reboot_waittime: &reboot_waittime 4
+region: &region RegionOne
+domain: &domain default
+scripts_dir: &scripts_dir /root/openrc_files
+keyfiles_dir: &keyfiles_dir /var/suit_keyfiles
+controller_mgmt_ip: &controller_mgmt_ip 192.168.33.10
+compute_mgmt_ip: &compute_mgmt_ip 192.168.33.20
+compute: &compute compute
+provider_ifname: &provider_ifname enp0s3
+
+pre_controller:
+  vagrant_root:
+    root_password: *all_password
+
+post_controller:
+  openstack_network:
+    hostname: *controller
+    hosts_entries: &hosts_entries
+      - server: 'localhost localhost.localdomain localhost4 localhost4.localdomain4'
+        ip: '127.0.0.1'
+      - server: 'localhost6 localhost6.localdomain6'
+        ip: '::1'
+      - server: 'controller'
+        ip: *controller_mgmt_ip
+      - server: 'compute'
+        ip: *compute_mgmt_ip
+    dns_servers: &dns_servers
+      - server: 8.8.8.8
+      - server: 8.8.4.4
+    reboot_waittime: *reboot_waittime
+  openstack_ntp:
+    ntp_servers: &ntp_servers
+      - server: 0.jp.pool.ntp.org
+      - server: 1.jp.pool.ntp.org
+      - server: 2.jp.pool.ntp.org
+      - server: 3.jp.pool.ntp.org
+    controller: *controller
+    allow_sync:
+      - network: 192.168.33.0/24
+  openstack_packages:
+  openstack_mariadb:
+    bind_address: *controller_mgmt_ip
+    tmp_dir: /tmp/openstack_mariadb
+    mariadb_pass: *all_password
+  openstack_mongodb:
+    bind_ip: *controller_mgmt_ip
+    smallfiles: no
+  openstack_rabbitmq:
+    rabbitmq_pass: *all_password
+  openstack_memcached:
+  openstack_keystone_install:
+    mariadb_pass: *all_password
+    keystone_dbpass: *all_password
+    admin_token: *all_password
+    controller: *controller
+    keyfiles_dir: *keyfiles_dir
+  openstack_keystone_setup:
+    admin_token: *all_password
+    controller: *controller
+    region: *region
+    domain: *domain
+    admin_pass: *all_password
+    demo_pass: *all_password
+    scripts_dir: *scripts_dir
+  openstack_swift_proxy:
+    scripts_dir: *scripts_dir
+    domain: *domain
+    swift_pass: *all_password
+    region: *region
+    controller: *controller
+
+pre_compute:
+  vagrant_root:
+    root_password: *all_password
+
+post_compute:
+  openstack_network:
+    hostname: *compute
+    hosts_entries: *hosts_entries
+    dns_servers: *dns_servers
+    reboot_waittime: *reboot_waittime
+  openstack_ntp:
+    ntp_servers: *ntp_servers
+    controller: *controller
+    allow_sync:
+      - network: 192.168.33.0/24
+  openstack_packages:
+  openstack_swift_storage:
+    swift_devs:
+      - "sdb"
+      - "sdc"
+    mount_points_dir: "/srv/node"
+    mgmt_ip: *compute_mgmt_ip
+
