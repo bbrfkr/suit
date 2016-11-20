@@ -129,6 +129,10 @@ password = #{ cinder_pass }
     EOS
     blockinfile(section, settings, "MANAGED BY ITAMAE (openstack_cinder_storage, keystone_authtoken)", content)
 
+    if not (content =~ /\[lvm\]/)
+      content.concat("\n[lvm]\n")
+    end
+
     section = "[lvm]"
     settings = <<-"EOS"
 volume_driver = cinder.volume.drivers.lvm.LVMVolumeDriver
