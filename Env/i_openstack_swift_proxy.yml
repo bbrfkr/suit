@@ -1,0 +1,26 @@
+- conn_name: pre_controller
+  conn_host: localhost
+  roles:
+    - vagrant_root
+  conn_user: vagrant
+  conn_pass: vagrant
+  conn_port: 2222
+
+- conn_name: post_controller
+  conn_host: localhost
+  roles:
+    - openstack_network
+    - openstack_ntp
+    - openstack_packages
+    - openstack_mariadb
+    - openstack_mongodb
+    - openstack_rabbitmq
+    - openstack_memcached
+    - suit_keyfiles 
+    - openstack_keystone_install
+    - openstack_keystone_setup
+    - openstack_swift_proxy
+  conn_user: root
+  conn_pass: password
+  conn_port: 2222
+
