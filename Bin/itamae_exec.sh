@@ -28,8 +28,16 @@ def itamae_exec(mode, verbose)
           end
         end
       end
-    
+
       connection['roles'].each do |role|
+        # set information of connection to environment variables
+        ENV['CONN_NAME'] = connection['conn_name']
+        ENV['CONN_HOST'] = connection['conn_host']
+        ENV['CONN_USER'] = connection['conn_user']
+        ENV['CONN_PORT'] = connection['conn_port'].to_s
+        ENV['CONN_PASS'] = connection['conn_pass']
+        ENV['CONN_IDKEY'] = connection['conn_idkey']
+
         cmd = "itamae ssh -h #{ connection['conn_host'] }" \
               + " -u #{ connection['conn_user'] }" \
               + " -p #{ connection['conn_port'] }" \

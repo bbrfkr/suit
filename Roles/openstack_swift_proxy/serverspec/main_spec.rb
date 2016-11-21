@@ -3,6 +3,7 @@ require './Modules/defaults'
 property.reverse_merge!(defaults_load(__FILE__))
 
 scripts_dir = property['openstack_swift_proxy']['scripts_dir']
+storage_nodes = property['openstack_swift_proxy']['storage_nodes']
 
 script = "source #{ scripts_dir }/admin-openrc &&"
 
@@ -41,6 +42,42 @@ describe ("openstack_swift_proxy") do
       describe package(pkg) do
         it { should be_installed }
       end
+    end
+  end
+
+  describe ("check account ring has information of all storage nodes") do
+    storage_nodes.each do |str_node|
+      str_node['devices'].each do |dev|
+        describe command("cd /etc/swift && swift-ring-builder account.builder | grep \"#{ str_node['mgmt_ip'] }\"| grep \"#{ dev }\"") do
+          its(:exit_status) { should eq 0 }
+        end
+      end
+    end
+  end
+
+  describe ("check container ring has information of all storage nodes") do
+    storage_nodes.each do |str_node|
+      str_node['devices'].each do |dev|
+        describe command("cd /etc/swift && swift-ring-builder container.builder | grep \"#{ str_node['mgmt_ip'] }\"| grep \"#{ dev }\"") do
+          its(:exit_status) { should eq 0 }
+        end
+      end
+    end
+  end
+
+  describe ("check object ring has information of all storage nodes") do
+    storage_nodes.each do |str_node|
+      str_node['devices'].each do |dev|
+        describe command("cd /etc/swift && swift-ring-builder object.builder | grep \"#{ str_node['mgmt_ip'] }\"| grep \"#{ dev }\"") do
+          its(:exit_status) { should eq 0 }
+        end
+      end
+    end
+  end
+
+  describe ("check ownership of the config directory") do
+    describe command("(ls -ld /etc/swift && ls -lR /etc/swift) | grep -e \"[d|-]\\([r|-][w|-][x|-]\\)\\{3\\}\" | grep -v \"root swift\"") do
+      its(:exit_status) { should_not eq 0 }
     end
   end
 end

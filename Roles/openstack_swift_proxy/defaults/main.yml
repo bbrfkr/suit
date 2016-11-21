@@ -5,3 +5,12 @@ openstack_swift_proxy:
   swift_pass: password
   region: RegionOne
   controller: localhost
+  replica_count: 3
+  storage_nodes:
+    - mgmt_ip: 192.168.0.10
+      devices:
+        - "sdb"
+  fetch_rings_dir: "Roles/openstack_swift_distribute_rings/itamae/files"
+  hash_path_suffix: password
+  hash_path_prefix: password
+
