@@ -19,7 +19,7 @@
     - suit_keyfiles 
     - openstack_keystone_install
     - openstack_keystone_setup
-    - openstack_swift_storage
+    - openstack_swift_controller
   conn_user: root
   conn_pass: password
   conn_port: 2222
