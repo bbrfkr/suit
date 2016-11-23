@@ -55,8 +55,8 @@ end
 # put config file 1
 template "/etc/swift/proxy-server.conf" do
   action :create
-  notifiles :restart, "service[openstack-swift-proxy]"
-  notifiles :restart, "service[memcached]"
+  notifies :restart, "service[openstack-swift-proxy]"
+  notifies :restart, "service[memcached]"
   source "templates/proxy-server.conf.erb"
   mode "640"
   variables(controller: controller, \
@@ -175,8 +175,8 @@ end
 # put config file 2
 template "/etc/swift/swift.conf" do
   action :create
-  notifiles :restart, "service[openstack-swift-proxy]"
-  notifiles :restart, "service[memcached]"
+  notifies :restart, "service[openstack-swift-proxy]"
+  notifies :restart, "service[memcached]"
   source "templates/swift.conf.erb"
   mode "640"
   variables(hash_path_suffix: hash_path_suffix, \
