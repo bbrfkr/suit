@@ -70,6 +70,15 @@ post_controller:
     swift_pass: *all_password
     region: *region
     controller: *controller
+    replica_count: 2
+    storage_nodes:
+      - mgmt_ip: *compute_mgmt_ip
+        devices:
+          - "sdb"
+          - "sdc"
+    fetch_rings_dir: "Roles/openstack_swift_storage/itamae/files"
+    hash_path_suffix: *all_password
+    hash_path_prefix: *all_password
 
 pre_compute:
   vagrant_root:
@@ -93,4 +102,5 @@ post_compute:
       - "sdc"
     mount_points_dir: "/srv/node"
     mgmt_ip: *compute_mgmt_ip
-
+    hash_path_suffix: *all_password
+    hash_path_prefix: *all_password
