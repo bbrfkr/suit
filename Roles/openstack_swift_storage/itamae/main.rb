@@ -131,6 +131,18 @@ end
 # put swift config files 1
 template "/etc/swift/account-server.conf" do
   action :create
+  notifies :restart "service[openstack-swift-account]"
+  notifies :restart "service[openstack-swift-account-auditor]"
+  notifies :restart "service[openstack-swift-account-reaper]"
+  notifies :restart "service[openstack-swift-account-replicator]"
+  notifies :restart "service[openstack-swift-container]"
+  notifies :restart "service[openstack-swift-container-auditor]"
+  notifies :restart "service[openstack-swift-container-replicator]"
+  notifies :restart "service[openstack-swift-container-updater]"
+  notifies :restart "service[openstack-swift-object]"
+  notifies :restart "service[openstack-swift-object-auditor]"
+  notifies :restart "service[openstack-swift-object-replicator]"
+  notifies :restart "service[openstack-swift-object-replicator]"
   source "templates/account-server.conf.erb"
   mode "640"
   variables(mgmt_ip: mgmt_ip, \
@@ -139,6 +151,18 @@ end
 
 template "/etc/swift/container-server.conf" do
   action :create
+  notifies :restart "service[openstack-swift-account]"
+  notifies :restart "service[openstack-swift-account-auditor]"
+  notifies :restart "service[openstack-swift-account-reaper]"
+  notifies :restart "service[openstack-swift-account-replicator]"
+  notifies :restart "service[openstack-swift-container]"
+  notifies :restart "service[openstack-swift-container-auditor]"
+  notifies :restart "service[openstack-swift-container-replicator]"
+  notifies :restart "service[openstack-swift-container-updater]"
+  notifies :restart "service[openstack-swift-object]"
+  notifies :restart "service[openstack-swift-object-auditor]"
+  notifies :restart "service[openstack-swift-object-replicator]"
+  notifies :restart "service[openstack-swift-object-replicator]"
   source "templates/container-server.conf.erb"
   mode "640"
   variables(mgmt_ip: mgmt_ip, \
@@ -147,6 +171,18 @@ end
 
 template "/etc/swift/object-server.conf" do
   action :create
+  notifies :restart "service[openstack-swift-account]"
+  notifies :restart "service[openstack-swift-account-auditor]"
+  notifies :restart "service[openstack-swift-account-reaper]"
+  notifies :restart "service[openstack-swift-account-replicator]"
+  notifies :restart "service[openstack-swift-container]"
+  notifies :restart "service[openstack-swift-container-auditor]"
+  notifies :restart "service[openstack-swift-container-replicator]"
+  notifies :restart "service[openstack-swift-container-updater]"
+  notifies :restart "service[openstack-swift-object]"
+  notifies :restart "service[openstack-swift-object-auditor]"
+  notifies :restart "service[openstack-swift-object-replicator]"
+  notifies :restart "service[openstack-swift-object-replicator]"
   source "templates/object-server.conf.erb"
   mode "640"
   variables(mgmt_ip: mgmt_ip, \
@@ -194,6 +230,18 @@ end
 # put swift config files 2
 template "/etc/swift/swift.conf" do
   action :create
+  notifies :restart "service[openstack-swift-account]"
+  notifies :restart "service[openstack-swift-account-auditor]"
+  notifies :restart "service[openstack-swift-account-reaper]"
+  notifies :restart "service[openstack-swift-account-replicator]"
+  notifies :restart "service[openstack-swift-container]"
+  notifies :restart "service[openstack-swift-container-auditor]"
+  notifies :restart "service[openstack-swift-container-replicator]"
+  notifies :restart "service[openstack-swift-container-updater]"
+  notifies :restart "service[openstack-swift-object]"
+  notifies :restart "service[openstack-swift-object-auditor]"
+  notifies :restart "service[openstack-swift-object-replicator]"
+  notifies :restart "service[openstack-swift-object-replicator]"
   source "templates/swift.conf.erb"
   mode "640"
   variables(hash_path_suffix: hash_path_suffix, \

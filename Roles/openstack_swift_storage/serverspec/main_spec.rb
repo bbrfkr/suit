@@ -79,7 +79,7 @@ describe ("openstack_swift_storage") do
                 "openstack-swift-object", "openstack-swift-object-auditor", \
                 "openstack-swift-object-replicator", "openstack-swift-object-updater"]
     services.each do |srv|
-      describe service("srv") do
+      describe service(srv) do
         it { should be_enabled }
         it { should be_running }
       end
