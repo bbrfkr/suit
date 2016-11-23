@@ -5,6 +5,8 @@ node.reverse_merge!(defaults_load(__FILE__))
 swift_devs = node['openstack_swift_storage']['swift_devs']
 mount_points_dir = node['openstack_swift_storage']['mount_points_dir']
 mgmt_ip = node['openstack_swift_storage']['mgmt_ip']
+hash_path_suffix = node['openstack_swift_storage']['hash_path_suffix']
+hash_path_prefix = node['openstack_swift_storage']['hash_path_prefix']
 
 # install xfsprogs and rsync
 packages = ["xfsprogs", "rsync"]
@@ -126,24 +128,63 @@ packages.each do |pkg|
   end
 end
 
-# put swift config files
+# put swift config files 1
 template "/etc/swift/account-server.conf" do
   action :create
+  notifies :restart, "service[openstack-swift-account]"
+  notifies :restart, "service[openstack-swift-account-auditor]"
+  notifies :restart, "service[openstack-swift-account-reaper]"
+  notifies :restart, "service[openstack-swift-account-replicator]"
+  notifies :restart, "service[openstack-swift-container]"
+  notifies :restart, "service[openstack-swift-container-auditor]"
+  notifies :restart, "service[openstack-swift-container-replicator]"
+  notifies :restart, "service[openstack-swift-container-updater]"
+  notifies :restart, "service[openstack-swift-object]"
+  notifies :restart, "service[openstack-swift-object-auditor]"
+  notifies :restart, "service[openstack-swift-object-replicator]"
+  notifies :restart, "service[openstack-swift-object-replicator]"
   source "templates/account-server.conf.erb"
+  mode "640"
   variables(mgmt_ip: mgmt_ip, \
             mount_points_dir: mount_points_dir)
 end
 
 template "/etc/swift/container-server.conf" do
   action :create
+  notifies :restart, "service[openstack-swift-account]"
+  notifies :restart, "service[openstack-swift-account-auditor]"
+  notifies :restart, "service[openstack-swift-account-reaper]"
+  notifies :restart, "service[openstack-swift-account-replicator]"
+  notifies :restart, "service[openstack-swift-container]"
+  notifies :restart, "service[openstack-swift-container-auditor]"
+  notifies :restart, "service[openstack-swift-container-replicator]"
+  notifies :restart, "service[openstack-swift-container-updater]"
+  notifies :restart, "service[openstack-swift-object]"
+  notifies :restart, "service[openstack-swift-object-auditor]"
+  notifies :restart, "service[openstack-swift-object-replicator]"
+  notifies :restart, "service[openstack-swift-object-replicator]"
   source "templates/container-server.conf.erb"
+  mode "640"
   variables(mgmt_ip: mgmt_ip, \
             mount_points_dir: mount_points_dir)
 end
 
 template "/etc/swift/object-server.conf" do
   action :create
+  notifies :restart, "service[openstack-swift-account]"
+  notifies :restart, "service[openstack-swift-account-auditor]"
+  notifies :restart, "service[openstack-swift-account-reaper]"
+  notifies :restart, "service[openstack-swift-account-replicator]"
+  notifies :restart, "service[openstack-swift-container]"
+  notifies :restart, "service[openstack-swift-container-auditor]"
+  notifies :restart, "service[openstack-swift-container-replicator]"
+  notifies :restart, "service[openstack-swift-container-updater]"
+  notifies :restart, "service[openstack-swift-object]"
+  notifies :restart, "service[openstack-swift-object-auditor]"
+  notifies :restart, "service[openstack-swift-object-replicator]"
+  notifies :restart, "service[openstack-swift-object-replicator]"
   source "templates/object-server.conf.erb"
+  mode "640"
   variables(mgmt_ip: mgmt_ip, \
             mount_points_dir: mount_points_dir)
 end
@@ -165,5 +206,64 @@ end
 
 execute "chmod -R 775 /var/cache/swift" do
   only_if "(ls -ld /var/cache/swift && ls -lR /var/cache/swift) | grep -e \"[d|-]\\([r|-][w|-][x|-]\\)\\{3\\}\" | grep -v -e \"[d|-]rwxrwxr-x\""
+end
+
+# put rings created by openstack-swift-proxy role
+remote_file "/etc/swift/account.ring.gz" do
+  action :create
+  source "files/account.ring.gz"
+  mode "644"
+end
+
+remote_file "/etc/swift/container.ring.gz" do
+  action :create
+  source "files/container.ring.gz"
+  mode "644"
+end
+
+remote_file "/etc/swift/object.ring.gz" do
+  action :create
+  source "files/object.ring.gz"
+  mode "644"
+end
+
+# put swift config files 2
+template "/etc/swift/swift.conf" do
+  action :create
+  notifies :restart, "service[openstack-swift-account]"
+  notifies :restart, "service[openstack-swift-account-auditor]"
+  notifies :restart, "service[openstack-swift-account-reaper]"
+  notifies :restart, "service[openstack-swift-account-replicator]"
+  notifies :restart, "service[openstack-swift-container]"
+  notifies :restart, "service[openstack-swift-container-auditor]"
+  notifies :restart, "service[openstack-swift-container-replicator]"
+  notifies :restart, "service[openstack-swift-container-updater]"
+  notifies :restart, "service[openstack-swift-object]"
+  notifies :restart, "service[openstack-swift-object-auditor]"
+  notifies :restart, "service[openstack-swift-object-replicator]"
+  notifies :restart, "service[openstack-swift-object-replicator]"
+  source "templates/swift.conf.erb"
+  mode "640"
+  variables(hash_path_suffix: hash_path_suffix, \
+            hash_path_prefix: hash_path_prefix)
+end
+
+# ensure proper ownership of the config direcotory
+execute "chown -R root:swift /etc/swift" do
+  only_if "(ls -ld /etc/swift && ls -lR /etc/swift) | grep -e \"[d|-]\\([r|-][w|-][x|-]\\)\\{3\\}\" | grep -v \"root swift\""
+end
+
+# enable and start swift services
+services = ["openstack-swift-account", "openstack-swift-account-auditor", \
+            "openstack-swift-account-reaper", "openstack-swift-account-replicator", \
+            "openstack-swift-container", "openstack-swift-container-auditor", \
+            "openstack-swift-container-replicator", "openstack-swift-container-updater", \
+            "openstack-swift-object", "openstack-swift-object-auditor", \
+            "openstack-swift-object-replicator", "openstack-swift-object-updater"]
+
+services.each do |srv|
+  service srv do
+    action [:enable, :start]
+  end
 end
 
