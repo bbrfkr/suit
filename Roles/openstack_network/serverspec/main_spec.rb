@@ -30,7 +30,11 @@ describe ("openstack_network") do
       hosts_entry['server'].split(/\s+/).each do |server|
         describe host(server) do
           it { should be_reachable }
-          its(:ipaddress) { should eq hosts_entry['ip'] }
+          if hosts_entry['ip'] =~ /^.*\..*\..*\..*$/
+            its(:ipv4_address) { should eq hosts_entry['ip'] }
+          else
+            its(:ipv6_address) { should eq hosts_entry['ip'] }
+          end
         end
       end 
     end
