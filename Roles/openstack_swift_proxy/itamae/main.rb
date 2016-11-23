@@ -55,6 +55,8 @@ end
 # put config file 1
 template "/etc/swift/proxy-server.conf" do
   action :create
+  notifiles :restart, "service[openstack-swift-proxy]"
+  notifiles :restart, "service[memcached]"
   source "templates/proxy-server.conf.erb"
   mode "640"
   variables(controller: controller, \
@@ -138,18 +140,22 @@ execute "cd /etc/swift && swift-ring-builder object.builder rebalance" do
 end
 
 # fetch rings
-local_ruby_block "fetch rings" do
-  block do
-    dl_files = ["account.ring.gz", "container.ring.gz", \
-                "object.ring.gz"]
-    dl_files.each do |dl_file|
-      if not (File.exist?(fetch_rings_dir + "/" + dl_file))
+is_account = run_command("ls /etc/swift/account.ring.gz", error: false).exit_status
+is_container = run_command("ls /etc/swift/container.ring.gz", error: false).exit_status
+is_object = run_command("ls /etc/swift/object.ring.gz", error: false).exit_status
+
+if is_account != 0 && is_container != 0 && is_object != 0
+  local_ruby_block "fetch rings" do
+    block do
+      dl_files = ["account.ring.gz", "container.ring.gz", \
+                  "object.ring.gz"]
+      dl_files.each do |dl_file|
         if ENV['CONN_IDKEY'] == nil
           Net::SSH.start(ENV['CONN_HOST'],
                          ENV['CONN_USER'],
                          :password => ENV['CONN_PASS'],
                          :port => ENV['CONN_PORT']) do |ssh|
-            ssh.scp.download!("/etc/swift/" + dl_file , fetch_rings_dir)
+            ssh.scp.download!("/etc/swift/" + dl_file , fetch_rings_dir + "/" + dl_file)
           end 
         else
           Net::SSH.start(ENV['CONN_HOST'],
@@ -161,14 +167,16 @@ local_ruby_block "fetch rings" do
           end 
         end
         puts "\e[32mfetch file \"#{ "/etc/swift/" + dl_file }\" to \"#{ fetch_rings_dir+ "/" + dl_file }\"\e[0m"
-      end
-    end    
+      end    
+    end
   end
 end
 
 # put config file 2
 template "/etc/swift/swift.conf" do
   action :create
+  notifiles :restart, "service[openstack-swift-proxy]"
+  notifiles :restart, "service[memcached]"
   source "templates/swift.conf.erb"
   mode "640"
   variables(hash_path_suffix: hash_path_suffix, \
