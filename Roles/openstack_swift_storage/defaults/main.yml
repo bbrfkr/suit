@@ -1,0 +1,7 @@
+---
+openstack_swift_storage:
+  swift_devs:
+    - "sdb"
+  mount_points_dir: "/srv/node"
+  mgmt_ip: 127.0.0.1
+

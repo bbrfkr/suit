@@ -3,4 +3,6 @@ Env/properties.yml
 Env/work_itamae
 /**/.vagrant
 /**/*.vdi
+Roles/openstack_swift_storage/itamae/files/*
+!/**/.gitkeep
 
