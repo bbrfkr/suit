@@ -69,13 +69,33 @@ end
 service "network"
 
 # reboot server when hostname or selinux state is changed
-if reboot_flag
-  execute "shutdown -r"
-  local_ruby_block "caution reboot" do
-    block do
-      puts "\e[31m***** server will be rebooted. please wait for #{ reboot_waittime } minutes... *****\e[0m"
+local_ruby_block "reboot server" do
+  block do
+    begin
+      if reboot_flag
+        if ENV['CONN_IDKEY'] == nil
+          Net::SSH.start(ENV['CONN_HOST'],
+                         ENV['CONN_USER'],
+                         :password => ENV['CONN_PASS'],
+                         :port => ENV['CONN_PORT']) do |ssh|
+            ssh.exec "reboot"
+          end
+        else
+          Net::SSH.start(ENV['CONN_HOST'],
+                         ENV['CONN_USER'],
+                         :keys => ENV['CONN_IDKEY'],
+                         :passphrase => ENV['CONN_PASS'],
+                         :port => ENV['CONN_PORT']) do |ssh|
+            ssh.exec "reboot"
+          end
+        end
+      end
+    rescue IOError
+      puts "\e[31m***************************************************\e[0m"
+      puts "\e[31mrebooting server is required!! \e[0m"
+      puts "\e[31mserver is rebooted. please wait for #{ reboot_waittime } minutes... \e[0m"
+      puts "\e[31m***************************************************\e[0m"
       sleep(reboot_waittime * 60)
     end
   end
 end
-
