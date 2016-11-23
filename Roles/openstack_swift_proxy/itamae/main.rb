@@ -56,6 +56,7 @@ end
 template "/etc/swift/proxy-server.conf" do
   action :create
   source "templates/proxy-server.conf.erb"
+  mode "640"
   variables(controller: controller, \
             domain: domain, \
             swift_pass: swift_pass)
@@ -169,6 +170,7 @@ end
 template "/etc/swift/swift.conf" do
   action :create
   source "templates/swift.conf.erb"
+  mode "640"
   variables(hash_path_suffix: hash_path_suffix, \
             hash_path_prefix: hash_path_prefix)
 end
@@ -176,5 +178,13 @@ end
 # ensure proper ownership of the config direcotory
 execute "chown -R root:swift /etc/swift" do
   only_if "(ls -ld /etc/swift && ls -lR /etc/swift) | grep -e \"[d|-]\\([r|-][w|-][x|-]\\)\\{3\\}\" | grep -v \"root swift\""
+end
+
+# enable and start proxy services
+services = ["openstack-swift-proxy", "memcached"]
+services.each do |srv|
+  service srv do
+    action [:enable, :start]
+  end
 end
 

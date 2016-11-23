@@ -80,4 +80,14 @@ describe ("openstack_swift_proxy") do
       its(:exit_status) { should_not eq 0 }
     end
   end
+
+  describe ("check proxy services are enabled and running") do
+    services = ["openstack-swift-proxy", "memcached"]
+    services.each do |srv|
+      describe service(srv) do
+        it { should be_enabled }
+        it { should be_running }
+      end
+    end
+  end
 end
