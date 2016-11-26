@@ -1,20 +1,10 @@
 require './Modules/spec_helper_serverspec'
 require './Modules/defaults'
+require './Modules/openstack_credential'
 property.reverse_merge!(defaults_load(__FILE__))
 
-credential = property['openstack_instance']['credential']
 instances = property['openstack_instance']['instances']
-
-# create credential string
-credential_str = ""
-credential_str += "OS_PROJECT_DOMAIN_NAME=" + credential['project_domain'] + " "
-credential_str += "OS_USER_DOMAIN_NAME=" + credential['user_domain'] + " "
-credential_str += "OS_PROJECT_NAME=" + credential['project'] + " "
-credential_str += "OS_USERNAME=" + credential['user'] + " "
-credential_str += "OS_PASSWORD=" + credential['password'] + " "
-credential_str += "OS_AUTH_URL=" + credential['auth_url'] + " "
-credential_str += "OS_IDENTITY_API_VERSION=" + credential['identity_api_version'].to_s + " "
-credential_str += "OS_IMAGE_API_VERSION=" + credential['image_api_version'].to_s + " "
+credential_str = openstack_credential(property['openstack_instance']['credential'])
 
 describe ("openstack_instances") do
   instances.each do |instance|
@@ -23,10 +13,11 @@ describe ("openstack_instances") do
         cmd = <<-"EOS"
           #{ credential_str } \\
           openstack server show #{ instance['name'] } | \\
-          grep status
+          grep status | \\
+          awk '{ print $4 }'
         EOS
         describe command(cmd) do
-          its(:stdout) { should match /ACTIVE/ }
+          its(:stdout) { should match /^ACTIVE$/ }
         end
       end
 
@@ -34,10 +25,11 @@ describe ("openstack_instances") do
         cmd = <<-"EOS"
           #{ credential_str } \\
           openstack server show #{ instance['name'] } | \\
-          grep name
+          grep name | \\
+          awk '{ print $4 }'
         EOS
         describe command(cmd) do
-          its(:stdout) { should match /#{ instance['name'] }/ }
+          its(:stdout) { should match /^#{ instance['name'] }$/ }
         end
       end
 
@@ -45,10 +37,11 @@ describe ("openstack_instances") do
         cmd = <<-"EOS"
           #{ credential_str } \\
           openstack server show #{ instance['name'] } | \\
-          grep image
+          grep image | \\
+          awk '{ print $4 }'
         EOS
         describe command(cmd) do
-          its(:stdout) { should match /#{ instance['image'] }/ }
+          its(:stdout) { should match /^#{ instance['image'] }$/ }
         end
       end
 
@@ -56,10 +49,11 @@ describe ("openstack_instances") do
         cmd = <<-"EOS"
           #{ credential_str } \\
           openstack server show #{ instance['name'] } | \\
-          grep flavor
+          grep flavor | \\
+          awk '{ print $4 }'
         EOS
         describe command(cmd) do
-          its(:stdout) { should match /#{ instance['flavor'] }/ }
+          its(:stdout) { should match /^#{ instance['flavor'] }$/ }
         end
       end
 
@@ -67,11 +61,12 @@ describe ("openstack_instances") do
         cmd = <<-"EOS"
           #{ credential_str } \\
           openstack server show #{ instance['name'] } | \\
-          grep security_groups
+          grep security_groups | \\
+          awk -F\\| '{ print $3 }'
         EOS
         describe command(cmd) do
           instance['security_groups'].each do |sec_grp|
-            its(:stdout) { should match /#{ sec_grp }/ }
+            its(:stdout) { should match /u'#{ sec_grp }'/ }
           end
         end
       end
@@ -80,10 +75,11 @@ describe ("openstack_instances") do
         cmd = <<-"EOS"
           #{ credential_str } \\
           openstack server show #{ instance['name'] } | \\
-          grep key_name
+          grep key_name | \\
+          awk '{ print $4 }'
         EOS
         describe command(cmd) do
-          its(:stdout) { should match /#{ instance['key_pair'] }/ }
+          its(:stdout) { should match /^#{ instance['key_pair'] }$/ }
         end
       end
 
@@ -91,10 +87,11 @@ describe ("openstack_instances") do
         cmd = <<-"EOS"
           #{ credential_str } \\
           openstack server show #{ instance['name'] } | \\
-          grep addresses
+          grep addresses | \\
+          awk '{ print $4 }'
         EOS
         describe command(cmd) do
-          its(:stdout) { should match /#{ instance['network'] }=/ }
+          its(:stdout) { should match /^#{ instance['network'] }=/ }
         end
       end
     end
