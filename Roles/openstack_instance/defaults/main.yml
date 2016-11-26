@@ -1,0 +1,19 @@
+---
+openstack_instance:
+  credential:
+    project_domain: default
+    user_domain: default
+    project: demo
+    user: demo
+    password: password
+    auth_url: http://controller:5000/v3
+    identity_api_version:  3
+    image_api_version: 2
+  instances:
+    image: cirros
+    flavor: m1.tiny
+    security_groups: default
+    key_pair: mykey
+    network: selfservice
+    name: myinstance 
+
