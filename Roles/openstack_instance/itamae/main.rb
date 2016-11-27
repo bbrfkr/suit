@@ -8,24 +8,44 @@ credential_str = openstack_credential(node['openstack_instance']['credential'])
 
 # create instances
 instances.each do |instance|
-  sec_grps_opt = ""
-  instance['security_groups'].each do |sec_grp|
-    sec_grps_opt += "--security-group #{ sec_grp } "
+
+  # check prameter "state"
+  if instance['state'] != "present" && instance['state'] != "absent"
+    fail 'parameter "state" should be "present" or "absent" '
   end
 
-  execute <<-"EOS" do
-    #{ credential_str } \\
-    openstack server create \\
-    --image #{ instance['image'] } \\
-    --flavor #{ instance['flavor']} \\
-    #{ sec_grps_opt } \\
-    --key-name #{ instance['key_pair'] } \\
-    --nic net-id=`#{ credential_str } openstack network list | grep #{ instance['network'] } | awk '{ print $2 }' ` \\
-    #{ instance['name'] }
-  EOS
-    not_if <<-"EOS"
-      #{ credential_str } openstack server show #{ instance['name'] }
+  if instance['state'] == "present"
+    sec_grps_opt = ""
+    instance['security_groups'].each do |sec_grp|
+      sec_grps_opt += "--security-group #{ sec_grp } "
+    end
+  
+    execute <<-"EOS" do
+      #{ credential_str } \\
+      openstack server create \\
+      --image #{ instance['image'] } \\
+      --flavor #{ instance['flavor']} \\
+      #{ sec_grps_opt } \\
+      --key-name #{ instance['key_pair'] } \\
+      --nic net-id=`#{ credential_str } openstack network list | grep #{ instance['network'] } | awk '{ print $2 }' ` \\
+      #{ instance['name'] }
     EOS
+      not_if <<-"EOS"
+        #{ credential_str } openstack server show #{ instance['name'] }
+      EOS
+    end
+  end
+
+  if instance['state'] == "absent"
+    execute <<-"EOS" do
+      #{ credential_str } \\
+      openstack server delete \\
+      #{ instance['name'] }
+    EOS
+      only_if <<-"EOS"
+        #{ credential_str } openstack server show #{ instance['name'] }
+      EOS
+    end
   end
 end
 
