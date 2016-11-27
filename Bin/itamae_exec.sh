@@ -38,6 +38,8 @@ def itamae_exec(mode, verbose)
         ENV['CONN_PASS'] = connection['conn_pass']
         ENV['CONN_IDKEY'] = connection['conn_idkey']
         ENV['CONN_PASSPHRASE'] = connection['conn_passphrase']
+        ENV['CONN_KEYAUTH'] = connection['conn_keyauth'] == nil \
+                              ? "false" : connection['conn_keyauth'].to_s
 
         cmd = "itamae ssh -h #{ connection['conn_host'] }" \
               + " -u #{ connection['conn_user'] }" \
@@ -49,22 +51,26 @@ def itamae_exec(mode, verbose)
               + " Roles/#{ role }/itamae/main.rb"
     
         pty = PTY.getpty(cmd)
-    
-        if connection['conn_idkey'] == nil && connection['conn_passphrase'] == nil
+
+        if (connection['conn_keyauth'] == nil ? false : connection['conn_keyauth']) ||\
+           connection['conn_idkey'] != nil ||\
+           connection['conn_passphrase'] != nil
+          if connection['conn_passphrase'] != nil
+            pty[0].expect(/.*passphrase.*:/,10) do |line|
+              puts line
+              system "stty -echo"
+              sleep 0.1
+              pty[1].puts connection['conn_passphrase']
+              sleep 0.1
+              system "stty echo"
+            end
+          end
+        else
           pty[0].expect(/password:/,10) do |line|
             puts line
             system "stty -echo"
             sleep 0.1
             pty[1].puts connection['conn_pass']
-            sleep 0.1
-            system "stty echo"
-          end
-        elsif connection['conn_passphrase'] != nil
-          pty[0].expect(/.*passphrase.*:/,10) do |line|
-            puts line
-            system "stty -echo"
-            sleep 0.1
-            pty[1].puts connection['conn_passphrase']
             sleep 0.1
             system "stty echo"
           end

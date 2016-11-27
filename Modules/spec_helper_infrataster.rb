@@ -3,6 +3,7 @@ require 'serverspec'
 
 # dummy setting for avoid warning
 set :backend, :ssh
+set :request_pty, true
 
 connection = ENV['CONN_NAME']
 if File.exists?('Env/properties.yml')
@@ -18,17 +19,16 @@ end
 
 Infrataster::Server.define(ENV['CONN_NAME'].to_sym) do |server|
   server.address = ENV['CONN_HOST']
-  if ENV['CONN_PASSPHRASE'] != nil
-    if ENV['CONN_IDKEY'] != nil
-      server.ssh = { user: ENV['CONN_USER'], keys: ["Env/" + ENV['CONN_IDKEY']],
-                     passphrase: ENV['CONN_PASSPHRASE'], port: ENV['CONN_PORT'].to_i }
-    else
-      server.ssh = { user: ENV['CONN_USER'], passphrase: ENV['CONN_PASSPHRASE'], 
-                     port: ENV['CONN_PORT'].to_i }
-    end
-  else
-    server.ssh = { user: ENV['CONN_USER'], password: ENV['CONN_PASS'],
-                   port: ENV['CONN_PORT'].to_i }
+  opt = { user: ENV['CONN_USER'], port: ENV['CONN_PORT'].to_i }
+  if ENV['CONN_IDKEY'] != nil
+    opt[:keys] = ["Env/" + ENV['CONN_IDKEY']]
   end
+  if ENV['CONN_PASSPHRASE'] != nil
+    opt[:passphrase] = ENV['CONN_PASSPHRASE']
+  end
+  if ENV['CONN_PASS'] != nil
+    opt[:password] = ENV['CONN_PASS']
+  end
+  server.ssh = opt
 end
 

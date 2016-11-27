@@ -3,6 +3,7 @@ require 'net/ssh'
 require 'yaml'
 
 set :backend, :ssh
+set :request_pty, true
 
 connection = ENV['CONN_NAME']
 host = ENV['CONN_HOST']
