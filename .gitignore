@@ -4,6 +4,7 @@ Env/work_itamae
 /**/.vagrant
 /**/*.vdi
 /**/*.pem
+/**/id_rsa
 Roles/openstack_swift_storage/itamae/files/*
 !/**/.gitkeep
 
