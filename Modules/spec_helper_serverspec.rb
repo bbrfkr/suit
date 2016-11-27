@@ -37,6 +37,9 @@ end
 if ENV['CONN_IDKEY'] != nil
   options[:keys] = "Env/" + ENV['CONN_IDKEY']
 end
+if ENV['CONN_PASSPHRASE'] != nil
+  options[:passphrase] = ENV['CONN_PASSPHRASE']
+end
 options[:port] = ENV['CONN_PORT']
 
 set :host,        options[:host_name] || host
