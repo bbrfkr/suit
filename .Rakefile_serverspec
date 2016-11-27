@@ -21,6 +21,9 @@ namespace :spec do
       if connection['conn_idkey'] != nil
         ENV['CONN_IDKEY'] = connection['conn_idkey']
       end
+      if connection['conn_passphrase'] != nil
+        ENV['CONN_PASSPHRASE'] = connection['conn_passphrase']
+      end
       ENV['CONN_PORT'] = connection['conn_port'].to_s
       t.pattern = 'Roles/{' + connection['roles'].join(",") + '}/serverspec/**/*_spec.rb'
     end
