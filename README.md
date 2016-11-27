@@ -109,7 +109,17 @@ this file is written as follow;
   conn_user: root
   conn_idkey: id_rsa_01
   conn_port: 22
+
+- conn_name: entry03
+  conn_host: 192.168.0.3
+  roles:
+    - role04
+  conn_user: root
+  conn_idkey: id_rsa_01
+  conn_passphrase: passphrase
+  conn_port: 22
 ```
+
 Each key means the following;
 * conn_name  
 The name of connection. We can name the connection an arbitrary name.
@@ -123,6 +133,8 @@ The user which is used when connect to target server.
 The password with the user specified in `conn_user`
 * conn_idkey  
 The file name of secret key. please put the secret key to the directory `Env/`.
+* conn_passphrase  
+The passphrase of secret key.
 * conn_port  
 The port number which is used when connect to target server.
 
