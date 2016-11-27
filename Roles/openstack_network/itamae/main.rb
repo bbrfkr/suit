@@ -103,6 +103,7 @@ local_ruby_block "reboot server" do
       puts "\e[31mserver is rebooted. please wait for #{ reboot_waittime } minutes... \e[0m"
       puts "\e[31m***************************************************\e[0m"
       sleep(reboot_waittime * 60)
+    rescue Net::SSH::Disconnect
     end
   end
 end
