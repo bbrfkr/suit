@@ -14,7 +14,7 @@ $ git clone https://github.com/bbrfkr/suit
 1. Install dependent package.  
 
     ```
-    # gem install itamae serverspec infrataster activesupport
+    # gem install itamae serverspec infrataster activesupport highline
     ```
 2. Change directory to suit repository.  
 
@@ -115,8 +115,15 @@ this file is written as follow;
   roles:
     - role04
   conn_user: root
-  conn_idkey: id_rsa_01
   conn_passphrase: passphrase
+  conn_port: 22
+
+- conn_name: entry04
+  conn_host: 192.168.0.4
+  roles:
+    - role05
+  conn_user: root
+  conn_keyauth: true
   conn_port: 22
 ```
 
@@ -135,6 +142,8 @@ The password with the user specified in `conn_user`
 The file name of secret key. please put the secret key to the directory `Env/`.
 * conn_passphrase  
 The passphrase of secret key.
+* conn_keyauth 
+Whether or not to perform the key authentication.
 * conn_port  
 The port number which is used when connect to target server.
 

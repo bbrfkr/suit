@@ -24,6 +24,9 @@ namespace :spec do
       if connection['conn_passphrase'] != nil
         ENV['CONN_PASSPHRASE'] = connection['conn_passphrase']
       end
+      if connection['conn_keyauth'] != nil
+        ENV['CONN_KEYAUTH'] = connection['conn_keyauth'].to_s
+      end
       ENV['CONN_PORT'] = connection['conn_port'].to_s
       t.pattern = 'Roles/{'  + connection['roles'].join(',') + '}/infrataster/**/*_spec.rb'
     end
