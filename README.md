@@ -142,7 +142,7 @@ The password with the user specified in `conn_user`
 The file name of secret key. please put the secret key to the directory `Env/`.
 * conn_passphrase  
 The passphrase of secret key.
-* conn_keyauth 
+* conn_keyauth  
 Whether or not to perform the key authentication.
 * conn_port  
 The port number which is used when connect to target server.
