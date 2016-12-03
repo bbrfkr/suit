@@ -1,0 +1,8 @@
+pre:
+  vagrant_root:
+    root_password: password
+
+post:
+  yum_update:
+    reboot_waittime: 3
+
