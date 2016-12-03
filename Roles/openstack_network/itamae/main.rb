@@ -1,4 +1,5 @@
 require './Modules/defaults'
+require './Modules/reboot'
 node.reverse_merge!(defaults_load(__FILE__))
 
 reboot_flag = false
