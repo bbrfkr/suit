@@ -1,0 +1,9 @@
+pre:
+  vagrant_root:
+    root_password: password
+
+post:
+  selinux:
+    status: Enforcing
+    reboot_waittime: 3
+
