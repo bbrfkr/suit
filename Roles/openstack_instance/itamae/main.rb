@@ -34,6 +34,38 @@ instances.each do |instance|
         #{ credential_str } openstack server show #{ instance['name'] }
       EOS
     end
+
+    if instance['floating_ip'] != nil
+      execute <<-"EOS" do
+        #{ credential_str } \\
+        openstack ip floating add #{ instance['floating_ip'] } #{ instance['name'] }
+      EOS
+        not_if <<-"EOS"
+          #{ credential_str } \\
+          openstack server show #{ instance['name'] } | \\
+            grep addresses | grep #{ instance['floating_ip'] }
+        EOS
+      end
+    else
+      find_floating_ip_cmd = <<-"EOS"
+        #{ credential_str } \\
+        openstack server show #{ instance['name'] } | grep addresses | \\
+          awk -F\\| '{ print $3 }' | \\
+          sed s/,//g | \\
+          sed s/[^\\ ]*=[^\\ ]*//g | \\
+          sed s/\\ //g
+      EOS
+      execute <<-"EOS" do     
+        #{ credential_str } \\
+        openstack ip floating remove \\
+          `#{ find_floating_ip_cmd.chomp }` \\
+          #{ instance['name']}
+      EOS
+        not_if <<-"EOS"
+          test -z `#{ find_floating_ip_cmd }`
+        EOS
+      end
+    end
   end
 
   if instance['state'] == "absent"
@@ -44,38 +76,6 @@ instances.each do |instance|
     EOS
       only_if <<-"EOS"
         #{ credential_str } openstack server show #{ instance['name'] }
-      EOS
-    end
-  end
-
-  if instance['floating_ip'] != nil
-    execute <<-"EOS" do
-      #{ credential_str } \\
-      openstack ip floating add #{ instance['floating_ip'] } #{ instance['name'] }
-    EOS
-      not_if <<-"EOS"
-        #{ credential_str } \\
-        openstack server show #{ instance['name'] } | \\
-          grep addresses | grep #{ instance['floating_ip'] }
-      EOS
-    end
-  else
-    find_floating_ip_cmd = <<-"EOS"
-      #{ credential_str } \\
-      openstack server show #{ instance['name'] } | grep addresses | \\
-        awk -F\\| '{ print $3 }' | \\
-        sed s/,//g | \\
-        sed s/[^\\ ]*=[^\\ ]*//g | \\
-        sed s/\\ //g
-    EOS
-    execute <<-"EOS" do     
-      #{ credential_str } \\
-      openstack ip floating remove \\
-        `#{ find_floating_ip_cmd.chomp }` \\
-        #{ instance['name']}
-    EOS
-      not_if <<-"EOS"
-        test -z `#{ find_floating_ip_cmd }`
       EOS
     end
   end
