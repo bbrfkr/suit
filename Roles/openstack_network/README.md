@@ -1,7 +1,12 @@
 # Role Name: openstack_network
 
 ## abstract
-This role executes basic network setting for openstack environment.
+This role executes basic network setting for openstack environment.  
+
+## CAUTION!!
+If at least one change of the following changes occurs, target will be rebooted.
+* Hostname is changed
+* SELinux state is changed
 
 ## procedures
 1. disable NetworkManager
