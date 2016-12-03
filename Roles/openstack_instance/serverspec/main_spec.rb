@@ -100,6 +100,34 @@ describe ("openstack_instances") do
             its(:stdout) { should match /^#{ instance['network'] }=/ }
           end
         end
+
+        if instance['floating_ip'] != nil
+          describe ("check floating ip is added to instance") do
+            cmd = <<-"EOS"
+              #{ credential_str } \\
+              openstack server show #{ instance['name'] } | \\
+                grep addresses | grep #{ instance['floating_ip'] }
+            EOS
+            describe command(cmd) do
+              its(:exit_status) { should eq 0 }
+            end
+          end
+        else
+          describe ("check floating ip is removed from instance") do
+            cmd = <<-"EOS"
+              test -z \\
+              `#{ credential_str } \\
+              openstack server show #{ instance['name'] } | grep addresses | \\
+                awk -F\\| '{ print $3 }' | \\
+                sed s/,//g | \\
+                sed s/[^\\ ]*=[^\\ ]*//g | \\
+                sed s/\\ //g`
+            EOS
+            describe command(cmd) do
+              its(:exit_status) { should eq 0 }
+            end
+          end
+        end
       end
 
       if instance['state'] == "absent"
@@ -110,43 +138,6 @@ describe ("openstack_instances") do
           EOS
           describe command(cmd) do
             its(:exit_status) { should_not eq 0 }
-          end
-        end
-      end
-
-      find_floating_ip_cmd = <<-"EOS"
-        #{ credential_str } \\
-        openstack server show #{ instance['name'] } | grep addresses | \\
-          awk -F\\| '{ print $3 }' | \\
-          sed s/,//g | \\
-          sed s/[^\\ ]*=[^\\ ]*//g | \\
-          sed s/\\ //g
-      EOS
-
-      if instance['floating_ip'] != nil
-        describe ("check floating ip is added to instance") do
-          cmd = <<-"EOS"
-            #{ credential_str } \\
-            openstack server show #{ instance['name'] } | \\
-              grep addresses | grep #{ instance['floating_ip'] }
-          EOS
-          describe command(cmd) do
-            its(:exit_status) { should eq 0 }
-          end
-        end
-      else
-        describe ("check floating ip is removed from instance") do
-          cmd = <<-"EOS"
-            test -z \\
-            `#{ credential_str } \\
-            openstack server show #{ instance['name'] } | grep addresses | \\
-              awk -F\\| '{ print $3 }' | \\
-              sed s/,//g | \\
-              sed s/[^\\ ]*=[^\\ ]*//g | \\
-              sed s/\\ //g`
-          EOS
-          describe command(cmd) do
-            its(:exit_status) { should eq 0 }
           end
         end
       end
