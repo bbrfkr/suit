@@ -2,6 +2,8 @@
 
 ## abstract
 This role executes yum update.  
+
+## CAUTION!!
 If at least one package is updated, target will be rebooted.
 
 ## procedures
@@ -14,9 +16,11 @@ If at least one package is updated, target will be rebooted.
 nothing
 
 ## parameters
+```
 ---
 yum_update:
   reboot_waittime: 3  # time of waiting for server to be up 
+```
 
 ## supported os
 * CentOS 7
