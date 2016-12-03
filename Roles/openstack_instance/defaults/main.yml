@@ -16,5 +16,6 @@ openstack_instance:
     key_pair: mykey
     network: selfservice
     name: myinstance 
+    floating_ip: 
     state: present
 
