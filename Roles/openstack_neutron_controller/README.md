@@ -15,7 +15,7 @@ This role executes install and setting neutron for controller node.
 9.  create keyfiles dir
 10. create plugin.ini symbolic link
 11. deploy service database
-12. reboot openstack-nova-api service
+12. restart openstack-nova-api service
 13. enable and start services
 
 ## tests (serverspec)
@@ -51,7 +51,6 @@ openstack_neutron_controller:
   overlayif_ip: 127.0.0.1           # ip with interface for overlay
   metadata_secret: password         # string for metadata secret
   keyfiles_dir: /var/suit_keyfiles  # location of keyfiles
-
 ```
 
 ## supported os

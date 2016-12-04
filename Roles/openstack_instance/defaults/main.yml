@@ -10,12 +10,13 @@ openstack_instance:
     identity_api_version:  3
     image_api_version: 2
   instances:
-    image: cirros
-    flavor: m1.tiny
-    security_groups: default
-    key_pair: mykey
-    network: selfservice
-    name: myinstance 
-    floating_ip: 
-    state: present
+    - image: cirros
+      flavor: m1.tiny
+      security_groups:
+        - default
+      key_pair: mykey
+      network: selfservice
+      name: myinstance 
+      floating_ip: 
+      state: present
 
