@@ -10,6 +10,6 @@ openstack_volume:
     identity_api_version:  3
     image_api_version: 2
   volumes:
-    - image: myvolume
+    - name: myvolume
       size: 1
 
