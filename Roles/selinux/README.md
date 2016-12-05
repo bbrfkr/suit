@@ -8,7 +8,7 @@ If SELinux status is changed, target will be rebooted.
 
 ## procedures
 1. edit selinux setting
-2. restore context of all files if SELinux status changed to "Enforcing"
+2. restore context of all files if SELinux status is changed to "Enforcing"
 
 ## tests (serverspec)
 1. check selinux status is appropriate
