@@ -25,7 +25,9 @@ This role executes install and setting nova for controller node.
 6.  check endpoints for nova are created
 7.  check packages are installed
 8.  check servcie databases is deployed
-9. check services are enabled and started
+9.  check services are enabled and started
+10. check cpu allocation ratio is specified
+11. check ram allocation ratio is specified
 
 ## tests (infrataster)
 nothing
@@ -44,6 +46,8 @@ openstack_nova_controller:
   mgmt_ip: 127.0.0.1                # ip of management network for controller node
   rabbitmq_pass: password           # password of openstack user for rabbitmq
   keyfiles_dir: /var/suit_keyfiles  # location of keyfiles
+  cpu_allocation_ratio: 16.0        # virtual cpu to physical cpu allocation ratio
+  ram_allocation_ratio: 1.5         # virtual ram to physical ram allocation ratio
 ```
 
 ## supported os

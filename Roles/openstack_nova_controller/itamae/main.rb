@@ -12,6 +12,8 @@ controller = node['openstack_nova_controller']['controller']
 mgmt_ip = node['openstack_nova_controller']['mgmt_ip']
 rabbitmq_pass = node['openstack_nova_controller']['rabbitmq_pass']
 keyfiles_dir = node['openstack_nova_controller']['keyfiles_dir']
+cpu_allocation_ratio = node['openstack_nova_controller']['cpu_allocation_ratio']
+ram_allocation_ratio = node['openstack_nova_controller']['ram_allocation_ratio']
 
 script = "source #{ scripts_dir }/admin-openrc &&"
 
@@ -114,6 +116,8 @@ auth_strategy = keystone
 my_ip = #{ mgmt_ip }
 use_neutron = True
 firewall_driver = nova.virt.firewall.NoopFirewallDriver
+cpu_allocation_ratio = #{ cpu_allocation_ratio }
+ram_allocation_ratio = #{ ram_allocation_ratio }
     EOS
     blockinfile(section, settings, "MANAGED BY ITAMAE (openstack_nova_controller, DEFAULT)", content)
 
