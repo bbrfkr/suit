@@ -5,6 +5,8 @@ property.reverse_merge!(defaults_load(__FILE__))
 mariadb_pass = property['openstack_nova_controller']['mariadb_pass']
 scripts_dir = property['openstack_nova_controller']['scripts_dir']
 keyfiles_dir = property['openstack_nova_controller']['keyfiles_dir']
+cpu_allocation_ratio = property['openstack_nova_controller']['cpu_allocation_ratio']
+ram_allocation_ratio = property['openstack_nova_controller']['ram_allocation_ratio']
 
 script = "source #{ scripts_dir }/admin-openrc &&"
 
@@ -95,6 +97,18 @@ describe ("openstack_nova_controller") do
         it { should be_enabled }
         it { should be_running }
       end
+    end
+  end
+
+  describe ("check cpu allocation ratio is specified") do
+    describe file("/etc/nova/nova.conf") do
+      its(:content) { should match /^cpu_allocation_ratio = #{ cpu_allocation_ratio }$/ }
+    end
+  end
+
+  describe ("check ram allocation ratio is specified") do
+    describe file("/etc/nova/nova.conf") do
+      its(:content) { should match /^ram_allocation_ratio = #{ ram_allocation_ratio }$/ }
     end
   end
 end
