@@ -58,5 +58,8 @@ openstack_instance:
       state: present                     # state of instance ("present" or "absent")
 ```
 
+## where you should put user data file?
+Put user data files in directory `Env/user_files`. 
+
 ## supported os
 * CentOS 7
