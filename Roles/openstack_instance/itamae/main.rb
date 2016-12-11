@@ -19,12 +19,16 @@ instances.each do |instance|
 
     # create tmp dir and send user data
     if instance['user_data'] != nil
-      directory tmp_dir do
-        action :create
-      end
-      remote_file "#{ tmp_dir }/#{ instance['user_data'] }" do
-        action :create
-        source "user_files/#{ instance['user_data'] }"
+      check_cmd = "#{ credential_str } openstack server show #{ instance['name'] }"
+      create_instance = run_command(check_cmd, error: false).exit_status
+      if create_instance != 0
+        directory tmp_dir do
+          action :create
+        end
+        remote_file "#{ tmp_dir }/#{ instance['user_data'] }" do
+          action :create
+          source "user_files/#{ instance['user_data'] }"
+        end
       end
     end
 
