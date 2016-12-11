@@ -22,8 +22,9 @@ instances.each do |instance|
       directory tmp_dir do
         action :create
       end
-      remote_file "user_files/#{ instance['user_data'] }" do
+      remote_file "#{ tmp_dir }/#{ instance['user_data'] }" do
         action :create
+        source "user_files/#{ instance['user_data'] }"
       end
     end
 
