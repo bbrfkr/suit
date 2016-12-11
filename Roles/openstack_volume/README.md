@@ -18,7 +18,7 @@ This role executes creating cinder volume of openstack environment.
   3.  check volume size is appropriate
   4.  check volume is attached to appropriate instance
 * if you want to delete volume,
-  1.  chevk volume doesn't exist
+  1.  check volume doesn't exist
 
 ## tests (infrataster)
 nothing
