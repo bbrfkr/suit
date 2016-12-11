@@ -1,6 +1,6 @@
 Env/inventory.yml
 Env/properties.yml
-Env/work_itamae
+Env/user_files/*
 /**/.vagrant
 /**/*.vdi
 /**/*.pem

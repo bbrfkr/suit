@@ -3,6 +3,7 @@ require './Modules/blockinfile'
 require './Modules/openstack_credential'
 node.reverse_merge!(defaults_load(__FILE__))
 
+tmp_dir = node['openstack_instance']['tmp_dir']
 instances = node['openstack_instance']['instances']
 credential_str = openstack_credential(node['openstack_instance']['credential'])
 
@@ -15,6 +16,19 @@ instances.each do |instance|
   end
 
   if instance['state'] == "present"
+
+    # create tmp dir and send user data
+    if instance['user_data'] != nil
+      directory tmp_dir do
+        action :create
+      end
+      remote_file "#{ tmp_dir }/#{ instance['user_data'] }" do
+        action :create
+        source "user_files/#{ instance['user_data'] }"
+      end
+    end
+
+    # create security group string
     sec_grps_opt = ""
     instance['security_groups'].each do |sec_grp|
       sec_grps_opt += "--security-group #{ sec_grp } "
@@ -28,6 +42,7 @@ instances.each do |instance|
       #{ sec_grps_opt } \\
       --key-name #{ instance['key_pair'] } \\
       --nic net-id=`#{ credential_str } openstack network list | grep #{ instance['network'] } | awk '{ print $2 }' ` \\
+      --user-data #{ tmp_dir }/#{ instance['user_data'] } \\
       #{ instance['name'] }
     EOS
       not_if <<-"EOS"
@@ -79,5 +94,10 @@ instances.each do |instance|
       EOS
     end
   end
+end
+
+# remove tmp dir
+directory tmp_dir do
+  action :delete
 end
 
