@@ -51,6 +51,7 @@ volumes.each do |volume|
         not_if <<-"EOS"
           #{ credential_str } openstack volume list | \\
           grep #{ volume['name'] } | \\
+          awk '{ print $12 }' | \\
           grep #{ volume['attached_instance'] } 
         EOS
       end
