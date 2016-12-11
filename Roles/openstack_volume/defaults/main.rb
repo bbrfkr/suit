@@ -12,4 +12,6 @@ openstack_volume:
   volumes:
     - name: myvolume
       size: 1
+      attached_instance: myinstance
+      state: present
 

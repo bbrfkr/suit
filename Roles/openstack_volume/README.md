@@ -4,12 +4,21 @@
 This role executes creating cinder volume of openstack environment.
 
 ## procedures
-1.  create volume
+* if you want to create volume,
+  1.  create volume
+  2.  attach volume to instance if you want to do that
+* if you want to delete volume,
+  1.  detach volume from instance if volume is attached
+  2.  delete volume
 
 ## tests (serverspec)
-1.  check volume is active
-2.  check volume name is appropriate
-3.  check volume size is appropriate
+* if you want to create volume,
+  1.  check volume is active
+  2.  check volume name is appropriate
+  3.  check volume size is appropriate
+  4.  check volume is attached to appropriate instance
+* if you want to delete volume,
+  1.  check volume doesn't exist
 
 ## tests (infrataster)
 nothing
@@ -30,6 +39,8 @@ openstack_instance:
   volumes:
     - name: myvolume                     # name of volume 
       size: 1                            # size of volume
+      attached_instance: myinstance      # instance to which volume is attached
+      state: present                     # state of volume ("present" or "absent")
 ```
 
 ## supported os
