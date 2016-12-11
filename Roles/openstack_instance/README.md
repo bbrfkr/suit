@@ -8,7 +8,9 @@ This role cannot associate plural floating ips with instance.
 
 ## procedures
 * if you want to create instance,
-  1.  create instance
+  1.  if user data exists, create temporary directory
+  2.  if user data exists, send user data file to temporary directory
+  3.  create instance
 * if you want to delete instance,
   1.  delete instance
 
@@ -42,6 +44,7 @@ openstack_instance:
     auth_url: http://controller:5000/v3  # url to authenticate
     identity_api_version:  3             # api version for identity service
     image_api_version: 2                 # api version for image service
+  tmp_dir: /tmp/openstack_instances      # location of temporary directory
   instances:
     - image: cirros                      # image name used for instance
       flavor: m1.tiny                    # flavor used for instance
@@ -51,6 +54,7 @@ openstack_instance:
       network: selfservice               # network name used by instance
       name: myinstance                   # name of instance
       floating_ip:                       # floating ip associated with instance (if this key is empty no floating ip is associated with instance)
+      user_data:                         # name of user data file
       state: present                     # state of instance ("present" or "absent")
 ```
 
