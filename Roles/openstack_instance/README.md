@@ -22,7 +22,7 @@ This role cannot associate plural floating ips with instance.
   4.  check falvor used by instance is appropriate
   5.  check security groups set to instance is appropriate
   6.  check key pair set to instance is appropriate
-  7.  check network used by instance is appropriate
+  7.  check network and ip used by instance are appropriate
   8.  check floating ip is added or removed for instance
 
 * if you have deleted instance,
@@ -51,7 +51,9 @@ openstack_instance:
       security_groups:                   # list of security groups being applied to instance  
         - default
       key_pair: mykey                    # key pair name used for instance
-      network: selfservice               # network name used by instance
+      nics:                              # list of nics attached to instance
+        - network: selfservice           # name of network used by instance
+          ip:                            # ip of the nic
       name: myinstance                   # name of instance
       floating_ip:                       # floating ip associated with instance (if this key is empty no floating ip is associated with instance)
       user_data:                         # name of user data file

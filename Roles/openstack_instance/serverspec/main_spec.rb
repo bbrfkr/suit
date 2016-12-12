@@ -89,15 +89,21 @@ describe ("openstack_instances") do
           end
         end
   
-        describe ("check network used by instance is appropriate") do
+        describe ("check network and ip used by instance are appropriate") do
           cmd = <<-"EOS"
             #{ credential_str } \\
             openstack server show #{ instance['name'] } | \\
             grep addresses | \\
-            awk '{ print $4 }'
+            awk -F\\| '{ print $3 }'
           EOS
           describe command(cmd) do
-            its(:stdout) { should match /^#{ instance['network'] }=/ }
+            instance['nics'].each do |nic|
+              if nic['ip'] != nil
+                its(:stdout) { should match /\s+#{ nic['network'] }=#{ nic['ip'] }[\s,;]/ }
+              else
+                its(:stdout) { should match /\s+#{ nic['network'] }=/ }
+              end
+            end
           end
         end
 
@@ -120,6 +126,7 @@ describe ("openstack_instances") do
               openstack server show #{ instance['name'] } | grep addresses | \\
                 awk -F\\| '{ print $3 }' | \\
                 sed s/,//g | \\
+                sed s/\\;//g | \\
                 sed s/[^\\ ]*=[^\\ ]*//g | \\
                 sed s/\\ //g`
             EOS
