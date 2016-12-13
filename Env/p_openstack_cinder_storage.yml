@@ -85,6 +85,8 @@ post_controller:
     mgmt_ip: *controller_mgmt_ip
     rabbitmq_pass: *all_password
     keyfiles_dir: *keyfiles_dir
+    cpu_allocation_ratio: 16.0
+    ram_allocation_ratio: 1.5
   openstack_neutron_controller:
     mariadb_pass: *all_password
     neutron_dbpass: *all_password
