@@ -17,8 +17,9 @@ instances.each do |instance|
 
   if instance['state'] == "present"
 
-    # create tmp dir and send user data
+    user_data_opt = ""
     if instance['user_data'] != nil
+      # create tmp dir and send user data
       check_cmd = "#{ credential_str } openstack server show #{ instance['name'] }"
       create_instance = run_command(check_cmd, error: false).exit_status
       if create_instance != 0
@@ -30,12 +31,25 @@ instances.each do |instance|
           source "user_files/#{ instance['user_data'] }"
         end
       end
+      # create option string of user data
+      user_data_opt = "--user-data #{ tmp_dir }/#{ instance['user_data'] }"
     end
 
     # create security group string
     sec_grps_opt = ""
     instance['security_groups'].each do |sec_grp|
       sec_grps_opt += "--security-group #{ sec_grp } "
+    end
+
+    # create option string of nics
+    nics_opt = ""
+    instance['nics'].each do |nic|
+      nics_opt += "--nic net-id=`#{ credential_str } openstack network list | grep #{ nic['network'] } | awk '{ print $2 }' `"
+      if nic['ip'] != nil
+        nics_opt += ",v4-fixed-ip=#{ nic['ip'] } "
+      else
+        nics_opt += " "
+      end
     end
   
     execute <<-"EOS" do
@@ -45,8 +59,8 @@ instances.each do |instance|
       --flavor #{ instance['flavor']} \\
       #{ sec_grps_opt } \\
       --key-name #{ instance['key_pair'] } \\
-      --nic net-id=`#{ credential_str } openstack network list | grep #{ instance['network'] } | awk '{ print $2 }' ` \\
-      --user-data #{ tmp_dir }/#{ instance['user_data'] } \\
+      #{ nics_opt } \\
+      #{ user_data_opt } \\
       #{ instance['name'] }
     EOS
       not_if <<-"EOS"
@@ -71,6 +85,7 @@ instances.each do |instance|
         openstack server show #{ instance['name'] } | grep addresses | \\
           awk -F\\| '{ print $3 }' | \\
           sed s/,//g | \\
+          sed s/\\;//g | \\
           sed s/[^\\ ]*=[^\\ ]*//g | \\
           sed s/\\ //g
       EOS

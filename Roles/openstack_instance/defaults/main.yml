@@ -16,7 +16,9 @@ openstack_instance:
       security_groups:
         - default
       key_pair: mykey
-      network: selfservice
+      nics:
+        - network: selfservice
+          ip:
       name: myinstance 
       floating_ip: 
       user_data:
