@@ -41,6 +41,7 @@ end
 # extract device names of devices with operating system
 root_dev = run_command("df | grep /$ | awk '{ print $1 }'").stdout.chomp
 is_lvm = root_dev =~ /\/mapper\// ? true : false
+root_devs = root_dev
 
 if is_lvm
   root_dev.slice!("/dev/mapper/")
@@ -54,7 +55,7 @@ root_devs = root_devs.split("\n").uniq
 filter_devs = []
 
 if is_lvm
-filter_devs = root_devs
+  filter_devs = root_devs
 end
 
 cinder_devices.each do |dev|
