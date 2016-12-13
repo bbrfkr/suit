@@ -145,22 +145,20 @@ local_ruby_block "fetch rings" do
     dl_files = ["account.ring.gz", "container.ring.gz", \
                 "object.ring.gz"]
     dl_files.each do |dl_file|
-      if not (File.exist?(fetch_rings_dir + "/" + dl_file))
-        opt = { :port => ENV['CONN_PORT'] }
-        if ENV['CONN_IDKEY'] != nil
-          opt[:keys] = ["Env/" + ENV['CONN_IDKEY']]
-        end
-        if ENV['CONN_PASSPHRASE'] != nil
-          opt[:passphrase] = ENV['CONN_PASSPHRASE']
-        end
-        if ENV['CONN_PASS'] != nil
-          opt[:password] = ENV['CONN_PASS']
-        end
-        Net::SSH.start(ENV['CONN_HOST'], ENV['CONN_USER'], opt) do |ssh|
-          ssh.scp.download!("/etc/swift/" + dl_file , fetch_rings_dir + "/" + dl_file)
-        end 
-        puts "\e[32mfetch file \"#{ "/etc/swift/" + dl_file }\" to \"#{ fetch_rings_dir+ "/" + dl_file }\"\e[0m"
+      opt = { :port => ENV['CONN_PORT'] }
+      if ENV['CONN_IDKEY'] != nil
+        opt[:keys] = ["Env/" + ENV['CONN_IDKEY']]
       end
+      if ENV['CONN_PASSPHRASE'] != nil
+        opt[:passphrase] = ENV['CONN_PASSPHRASE']
+      end
+      if ENV['CONN_PASS'] != nil
+        opt[:password] = ENV['CONN_PASS']
+      end
+      Net::SSH.start(ENV['CONN_HOST'], ENV['CONN_USER'], opt) do |ssh|
+        ssh.scp.download!("/etc/swift/" + dl_file , fetch_rings_dir + "/" + dl_file)
+      end 
+      puts "\e[32mfetch file \"#{ "/etc/swift/" + dl_file }\" to \"#{ fetch_rings_dir+ "/" + dl_file }\"\e[0m"
     end    
   end
 end
