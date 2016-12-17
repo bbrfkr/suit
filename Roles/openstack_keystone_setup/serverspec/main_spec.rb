@@ -15,13 +15,9 @@ describe ("openstack_keystone_setup") do
   end
 
   describe ("check endpoints are created") do
-    describe command("#{ admin_script } openstack endpoint list | grep keystone") do
+    describe command("#{ admin_script } openstack endpoint list | awk '{ print $6, $12 }' | grep keystone") do
       its(:stdout) { should match /public/ }
-    end
-    describe command("#{ admin_script } openstack endpoint list | grep keystone") do
       its(:stdout) { should match /internal/ }
-    end
-    describe command("#{ admin_script } openstack endpoint list | grep keystone") do
       its(:stdout) { should match /admin/ }
     end
   end
