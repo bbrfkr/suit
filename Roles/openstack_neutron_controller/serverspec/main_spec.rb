@@ -43,7 +43,7 @@ describe ("openstack_neutron_controller") do
   end
 
   describe ("check endpoints for neutron are created") do
-    describe command("#{ script } openstack endpoint list | grep neutron") do
+    describe command("#{ script } openstack endpoint list | awk '{ print $6, $12 }' | grep neutron") do
       its(:stdout) { should match /public/ }
       its(:stdout) { should match /internal/ }
       its(:stdout) { should match /admin/ }
