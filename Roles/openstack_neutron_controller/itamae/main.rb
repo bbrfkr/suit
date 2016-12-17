@@ -57,15 +57,15 @@ end
 
 # create endpoints for neutron
 execute "#{ script } openstack endpoint create --region #{ region } network public http://#{ controller }:9696" do
-  not_if "#{ script } openstack endpoint list | grep neutron | grep public"
+  not_if "#{ script } openstack endpoint list | awk '{ print $6, $12 }' | grep neutron | grep public"
 end
 
 execute "#{ script } openstack endpoint create --region #{ region } network internal http://#{ controller }:9696" do
-  not_if "#{ script } openstack endpoint list | grep neutron | grep internal"
+  not_if "#{ script } openstack endpoint list | awk '{ print $6, $12 }' | grep neutron | grep internal"
 end
 
 execute "#{ script } openstack endpoint create --region #{ region } network admin http://#{ controller }:9696" do
-  not_if "#{ script } openstack endpoint list | grep neutron | grep admin"
+  not_if "#{ script } openstack endpoint list | awk '{ print $6, $12 }' | grep neutron | grep admin"
 end
 
 # install packages
