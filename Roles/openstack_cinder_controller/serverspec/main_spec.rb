@@ -46,12 +46,12 @@ describe ("openstack_cinder_controller") do
   end
 
   describe ("check endpoints for cinder are created") do
-    describe command("#{ script } openstack endpoint list | grep cinder | grep -v cinderv2") do
+    describe command("#{ script } openstack endpoint list | awk '{ print $6, $12 }' | grep cinder | grep -v cinderv2") do
       its(:stdout) { should match /public/ }
       its(:stdout) { should match /internal/ }
       its(:stdout) { should match /admin/ }
     end
-    describe command("#{ script } openstack endpoint list | grep cinderv2") do
+    describe command("#{ script } openstack endpoint list | awk '{ print $6, $12 }' | grep cinderv2") do
       its(:stdout) { should match /public/ }
       its(:stdout) { should match /internal/ }
       its(:stdout) { should match /admin/ }

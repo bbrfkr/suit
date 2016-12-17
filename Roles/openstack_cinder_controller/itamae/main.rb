@@ -58,27 +58,27 @@ end
 
 # create endpoints for cinder, cinderv2
 execute "#{ script } openstack endpoint create --region #{ region } volume public http://#{ controller }:8776/v1/%\\(tenant_id\\)s" do
-  not_if "#{ script } openstack endpoint list | grep cinder | grep -v cinderv2 | grep public"
+  not_if "#{ script } openstack endpoint list | awk '{ print $6, $12 }' | grep cinder | grep -v cinderv2 | grep public"
 end
 
 execute "#{ script } openstack endpoint create --region #{ region } volume internal http://#{ controller }:8776/v1/%\\(tenant_id\\)s" do
-  not_if "#{ script } openstack endpoint list | grep cinder | grep -v cinderv2 | grep internal"
+  not_if "#{ script } openstack endpoint list | awk '{ print $6, $12 }' | grep cinder | grep -v cinderv2 | grep internal"
 end
 
 execute "#{ script } openstack endpoint create --region #{ region } volume admin http://#{ controller }:8776/v1/%\\(tenant_id\\)s" do
-  not_if "#{ script } openstack endpoint list | grep cinder | grep -v cinderv2 | grep admin"
+  not_if "#{ script } openstack endpoint list | awk '{ print $6, $12 }' | grep cinder | grep -v cinderv2 | grep admin"
 end
 
 execute "#{ script } openstack endpoint create --region #{ region } volumev2 public http://#{ controller }:8776/v2/%\\(tenant_id\\)s" do
-  not_if "#{ script } openstack endpoint list | grep cinderv2 | grep public"
+  not_if "#{ script } openstack endpoint list | awk '{ print $6, $12 }' | grep cinderv2 | grep public"
 end
 
 execute "#{ script } openstack endpoint create --region #{ region } volumev2 internal http://#{ controller }:8776/v2/%\\(tenant_id\\)s" do
-  not_if "#{ script } openstack endpoint list | grep cinderv2 | grep internal"
+  not_if "#{ script } openstack endpoint list | awk '{ print $6, $12 }' | grep cinderv2 | grep internal"
 end
 
 execute "#{ script } openstack endpoint create --region #{ region } volumev2 admin http://#{ controller }:8776/v2/%\\(tenant_id\\)s" do
-  not_if "#{ script } openstack endpoint list | grep cinderv2 | grep admin"
+  not_if "#{ script } openstack endpoint list | awk '{ print $6, $12 }' | grep cinderv2 | grep admin"
 end
 
 # install package
