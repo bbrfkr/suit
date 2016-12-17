@@ -9,6 +9,15 @@ packages.each do |pkg|
   end
 end
 
+# edit config
+file "/etc/sysconfig/memcached" do
+  action :edit
+  notifies :restart, "service[memcached]"
+  block do |content|
+    content.gsub!(/^OPTIONS=\".*\"$/, "OPTIONS=\"\"")
+  end
+end
+
 # enable and start service
 service "memcached" do
   action [:enable, :start]
