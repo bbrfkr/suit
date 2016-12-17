@@ -19,15 +19,15 @@ end
 
 # create endpoints
 execute "#{ envs } openstack endpoint create --region #{ region } identity public http://#{ controller }:5000/v3" do
-  not_if "#{ envs } openstack endpoint list | grep keystone | grep public"
+  not_if "#{ envs } openstack endpoint list | awk '{ print $6, $12 }' | grep keystone | grep public"
 end
 
 execute "#{ envs } openstack endpoint create --region #{ region } identity internal http://#{ controller }:5000/v3" do
-  not_if "#{ envs } openstack endpoint list | grep keystone | grep internal"
+  not_if "#{ envs } openstack endpoint list | awk '{ print $6, $12 }' | grep keystone | grep internal"
 end
 
 execute "#{ envs } openstack endpoint create --region #{ region } identity admin http://#{ controller }:35357/v3" do
-  not_if "#{ envs } openstack endpoint list | grep keystone | grep admin"
+  not_if "#{ envs } openstack endpoint list | awk '{ print $6, $12 }' | grep keystone | grep admin"
 end
 
 # create domain
