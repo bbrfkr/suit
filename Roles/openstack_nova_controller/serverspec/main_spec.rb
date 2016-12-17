@@ -60,7 +60,7 @@ describe ("openstack_nova_controller") do
   end
 
   describe ("check endpoints for nova are created") do
-    describe command("#{ script } openstack endpoint list | grep nova") do
+    describe command("#{ script } openstack endpoint list | awk '{ print $6, $12 }' | grep nova") do
       its(:stdout) { should match /public/ }
       its(:stdout) { should match /internal/ }
       its(:stdout) { should match /admin/ }
