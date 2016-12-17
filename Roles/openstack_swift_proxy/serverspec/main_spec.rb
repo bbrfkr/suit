@@ -27,7 +27,7 @@ describe ("openstack_swift_proxy") do
   end
 
   describe ("check endpoints for swift are created") do
-    describe command("#{ script } openstack endpoint list | grep swift") do
+    describe command("#{ script } openstack endpoint list | awk '{ print $6, $12 }' | grep swift") do
       its(:stdout) { should match /public/ }
       its(:stdout) { should match /internal/ }
       its(:stdout) { should match /admin/ }

@@ -32,15 +32,15 @@ end
 
 # create endpoints for swift
 execute "#{ script } openstack endpoint create --region #{ region } object-store public http://#{ controller }:8080/v1/AUTH_%\\(tenant_id\\)s" do
-  not_if "#{ script } openstack endpoint list | grep swift | grep public"
+  not_if "#{ script } openstack endpoint list | awk '{ print $6, $12 }' | grep swift | grep public"
 end
 
 execute "#{ script } openstack endpoint create --region #{ region } object-store internal http://#{ controller }:8080/v1/AUTH_%\\(tenant_id\\)s" do
-  not_if "#{ script } openstack endpoint list | grep swift | grep internal"
+  not_if "#{ script } openstack endpoint list | awk '{ print $6, $12 }' | grep swift | grep internal"
 end
 
 execute "#{ script } openstack endpoint create --region #{ region } object-store admin http://#{ controller }:8080/v1" do
-  not_if "#{ script } openstack endpoint list | grep swift | grep admin"
+  not_if "#{ script } openstack endpoint list | awk '{ print $6, $12 }' | grep swift | grep admin"
 end
 
 # install packages
