@@ -53,15 +53,15 @@ end
 
 # create endpoints for glance
 execute "#{ scripts } openstack endpoint create --region #{ region } image public http://#{ controller }:9292" do
-  not_if "#{ scripts } openstack endpoint list | grep glance | grep public"
+  not_if "#{ scripts } openstack endpoint list | awk '{ print $6, $12 }' | grep glance | grep public"
 end
 
 execute "#{ scripts } openstack endpoint create --region #{ region } image internal http://#{ controller }:9292" do
-  not_if "#{ scripts } openstack endpoint list | grep glance | grep internal"
+  not_if "#{ scripts } openstack endpoint list | awk '{ print $6, $12 }' | grep glance | grep internal"
 end
 
 execute "#{ scripts } openstack endpoint create --region #{ region } image admin http://#{ controller }:9292" do
-  not_if "#{ scripts } openstack endpoint list | grep glance | grep admin"
+  not_if "#{ scripts } openstack endpoint list | awk '{ print $6, $12 }' | grep glance | grep admin"
 end
 
 # package install

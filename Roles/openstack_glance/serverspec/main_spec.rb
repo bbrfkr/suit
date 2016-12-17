@@ -45,7 +45,7 @@ describe ("openstack_glance") do
   end
 
   describe ("check endpoints for glance are created") do
-    describe command("#{ admin_script } openstack endpoint list | grep glance") do
+    describe command("#{ admin_script } openstack endpoint list | awk '{ print $6, $12 }' | grep glance") do
       its(:stdout) { should match /public/ }
       its(:stdout) { should match /internal/ }
       its(:stdout) { should match /admin/ }
