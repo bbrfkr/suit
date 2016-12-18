@@ -85,7 +85,7 @@ virt_type = qemu
       blockinfile(section, settings, "MANAGED BY ITAMAE (openstack_nova_compute, libvirt)", content)
     end
 
-    content.gsub!("^#?keymap=.*$", "keymap=#{ console_keymap }")
+    content.gsub!(/^#?keymap=.*$/, "keymap=#{ console_keymap }")
   end
 end
 
