@@ -25,6 +25,7 @@ openstack_nova_compute:
   rabbitmq_pass: password  # password of openstack user for rabbitmq
   domain: default          # domain name of openstack environment
   nova_pass: password      # password of nova user
+  console_keymap: ja       # keymap used by console
 ```
 
 ## supported os

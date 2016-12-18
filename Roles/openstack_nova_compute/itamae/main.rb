@@ -7,6 +7,7 @@ controller = node['openstack_nova_compute']['controller']
 rabbitmq_pass = node['openstack_nova_compute']['rabbitmq_pass']
 domain = node['openstack_nova_compute']['domain']
 nova_pass = node['openstack_nova_compute']['nova_pass']
+console_keymap = node['openstack_nova_compute']['console_keymap']
 
 package "openstack-nova-compute" do
   action :install
@@ -83,6 +84,8 @@ virt_type = qemu
       settings = "" 
       blockinfile(section, settings, "MANAGED BY ITAMAE (openstack_nova_compute, libvirt)", content)
     end
+
+    content.gsub!(/^#?keymap=.*$/, "keymap=#{ console_keymap }")
   end
 end
 
