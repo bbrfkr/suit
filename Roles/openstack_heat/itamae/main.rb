@@ -146,6 +146,10 @@ rabbit_password = #{ rabbitmq_pass }
     EOS
     blockinfile(section, settings, "MANAGED BY ITAMAE (openstack_heatr, oslo_messaging_rabbit)", content)
 
+    if content !~ /\[keystone_authtoken\]/
+      content.concat("\n[keystone_authtoken]\n")
+    end
+
     section = "[keystone_authtoken]"
     settings = <<-"EOS"
 auth_uri = http://#{ controller }:5000
