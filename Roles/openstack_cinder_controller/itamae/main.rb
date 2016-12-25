@@ -89,6 +89,8 @@ end
 # edit config file
 file "/etc/cinder/cinder.conf" do
   action :edit
+  notifies :restart, "service[openstack-cinder-api]"
+  notifies :restart, "service[openstack-cinder-scheduler]"
   block do |content|
     section = "[database]"
     settings = <<-"EOS"

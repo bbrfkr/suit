@@ -15,7 +15,7 @@ describe ("openstack_cinder_controller") do
     end
   end
 
-  describe ("check permissions is granted to neutron database") do
+  describe ("check permissions is granted to cinder database") do
     describe command("mysql -uroot -p#{ mariadb_pass } -e \"show grants for 'cinder'@'localhost'\" | grep \"ALL PRIVILEGES ON \\`cinder\\`.* TO 'cinder'@'localhost'\"") do
       its(:exit_status) { should eq 0 }
     end
