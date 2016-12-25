@@ -69,4 +69,5 @@ post_controller:
     region: *region
     controller: *controller
     heat_domain_admin_pass: *all_password
-    
+    rabbitmq_pass: *all_password
+    keyfiles_dir: /var/suit_keyfiles 
