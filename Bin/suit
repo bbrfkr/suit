@@ -42,22 +42,22 @@ end
 
 def exec_itamae(mode, option)
   system "Bin/itamae_exec.sh #{ mode.to_s } #{ option.to_s }"
-  $rc = $?.to_i
+  $rc = $?.exitstatus
 end
 
 def exec_serverspec(mode, option)
   system "Bin/serverspec_exec.sh #{ mode.to_s } #{ option.to_s }"
-  $rc = $?.to_i
+  $rc = $?.exitstatus
 end
 
 def exec_infrataster(mode, option)
   system "Bin/infrataster_exec.sh #{ mode.to_s } #{ option.to_s }"
-  $rc = $?.to_i
+  $rc = $?.exitstatus
 end
 
 def show_role_list()
   system "ls -1 Roles"
-  $rc = $?.to_i
+  $rc = $?.exitstatus
 end
 
 def show_role_params(role)
@@ -70,9 +70,11 @@ def show_role_params(role)
       end
     else
       puts "ERROR: role '#{ role }' doesn't have defaults/main.yml"
+      $rc = 1
     end
   else
       puts "ERROR: role '#{ role }' is not found"
+      $rc = 1
   end
 end
 
@@ -93,15 +95,18 @@ def parse(args)
         show_role_list()
       else
         puts "ERROR: invalid option"
+        $rc = 1
       end
     when "params"
       if arg2 == nil
-        pust "ERROR: specify a role name"
+        puts "ERROR: specify a role name"
+        $rc = 1
       else
         show_role_params(arg2)
       end
     else
       puts "ERROR: invalid subcommand"
+      $rc = 1
     end
   when "itamae"
     exec_itamae(arg1, arg2)
@@ -111,14 +116,11 @@ def parse(args)
     exec_infrataster(arg1, arg2)
   else
     puts "ERROR: invalid subcommand #{ arg0 }"
+    $rc = 1
   end
 end
 
 # main
 parse(ARGV)
-if $rc == 0
-  exit 0
-else
-  exit 1
-end
+exit $rc
 
