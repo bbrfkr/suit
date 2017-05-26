@@ -8,7 +8,4 @@ describe ("os.httpd") do
       it { should be_installed }
     end
   end
-  describe ("fail test") do
-    it { fail "fail test" }
-  end
 end
